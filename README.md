@@ -1,127 +1,146 @@
-# 🪩 Neon Emoji Memory
+# 🏃 Neon Emoji Runner
 
-<div align="center">
+<p align="center">
+  <img src="https://img.shields.io/badge/YouTube-Playables%20Ready-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Playables">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT">
+</p>
 
-![Neon](https://img.shields.io/badge/Neon-Theme-ff00ff?style=for-the-badge&logo=css3&logoColor=white)
-![YouTube Playables](https://img.shields.io/badge/YouTube-Playables%20Ready-FF0000?style=for-the-badge&logo=youtube&logoColor=white)
-![HTML5](https://img.shields.io/badge/HTML5-Game-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![Made by Rahul](https://img.shields.io/badge/Made%20by-Rahul%20Kumar-00ffff?style=for-the-badge)
+<p align="center">
+  <strong>A sleek, neon-soaked endless runner built for the web and fully compatible with YouTube Playables.</strong>
+</p>
 
-**A beautiful neon memory matching game**  
-Match glowing emojis in a cyberpunk atmosphere.
-
-[Play Locally](#-how-to-run) · [YouTube Playables](#-youtube-playables-ready) · [Features](#-features)
-
-</div>
+<p align="center">
+  Dodge glowing obstacles • Collect power-ups • Chain combos • Survive the neon streets
+</p>
 
 ---
 
 ## ✨ Features
 
-- **Neon Aesthetic** – Animated floating emoji particles, glowing cards, cyan + magenta neon effects
-- **3 Difficulty Levels**
-  - Easy → 4×4 (8 pairs)
-  - Normal → 6×4 (12 pairs)
-  - Hard → 8×4 (16 pairs)
-- **Combo System** – Match streaks trigger neon “COMBO xN!” popups
-- **Timer + Moves + Best Score** – High scores saved (YouTube cloud save + localStorage fallback)
-- **Sound Effects** – Pure Web Audio (no external files)
-- **Fully Responsive** – Works on all aspect ratios (portrait, landscape, ultrawide)
-- **Touch + Mouse + Keyboard** – Enter / Space to start or restart
-- **YouTube Playables Ready** – Full SDK integration
+| Feature | Description |
+|---------|-------------|
+| **Neon Aesthetic** | Animated cyan grid, horizon glow, particle bursts, pulsing invincibility |
+| **Smooth Physics** | Gravity-based jumping, responsive left/right movement |
+| **Dynamic Obstacles** | 🧱 🚧 🚨 💣 ⚡ – ground & flying variants that speed up over time |
+| **Power-Ups** | ⭐ Invincibility / Shield • 💫 Magnet – pull nearby power-ups |
+| **Combo System** | Chain successful dodges for bonus points |
+| **Touch + Keyboard** | Full mobile touch controls + Arrow keys / WASD / Space |
+| **Progressive Difficulty** | Obstacle speed & spawn rate scale with score |
+| **High Score** | Persists via `localStorage` + YouTube Playables `saveData` |
+| **Audio** | Procedural Web Audio tones (jump, collect, hit, combo) – respects platform mute |
+| **Pause / Resume** | Keyboard (P / Esc) + YouTube platform pause/resume callbacks |
+| **Responsive** | Works across all aspect ratios (9:16, 16:9, 1:1, ultrawide, etc.) |
 
 ---
 
-## 🎮 How to Play
+## 🎮 Controls
 
-1. Choose difficulty on the start screen
-2. Click / tap two cards to flip them
-3. Match the same neon emojis
-4. Clear the board as fast as possible with the fewest moves
-5. Beat your best score!
-
----
-
-## 🚀 How to Run
-
-Just open `index.html` in any modern browser.
-
-```bash
-# or serve locally
-npx serve .
-# or
-python -m http.server 8080
-```
+| Action | Desktop | Mobile |
+|--------|---------|--------|
+| Move Left | ← or A | ◀ button |
+| Move Right | → or D | ▶ button |
+| Jump | ↑ / W / Space | ▲ button |
+| Pause | P or Esc | — |
 
 ---
 
-## 📺 YouTube Playables Ready
+## 🚀 Quick Start
 
-This game fully supports the **YouTube Playables** requirements:
+1. Clone or download this repository
+2. Open `index.html` in any modern browser
+3. Click **PLAY** and start running!
 
-| Requirement                  | Status |
-|-----------------------------|--------|
-| Loads SDK first             | ✅     |
-| `firstFrameReady()`         | ✅     |
-| `gameReady()`               | ✅     |
-| Pause / Resume              | ✅     |
-| Responsive (all ratios)     | ✅     |
-| Touch + Mouse               | ✅     |
-| Relative paths only         | ✅     |
-| No external network calls   | ✅     |
-| `saveData` / `loadData`     | ✅     |
-| Small single-file bundle    | ✅     |
-
-### Test Suite
-You can test it in the official [YouTube Playables Test Suite](https://developers.google.com/youtube/gaming/playables/reference/test_suite).
+No build step, no dependencies – pure HTML + CSS + JavaScript.
 
 ---
 
-## 🛠 Tech Stack
+## 📺 YouTube Playables Compatibility
 
-- Pure **HTML5 + CSS3 + Vanilla JavaScript**
-- Canvas particle system
-- Web Audio API
-- YouTube Playables SDK
+This game is built to pass the YouTube Playables certification requirements:
 
-No frameworks. No build step. Instant load.
+- ✅ Loads the official Playables SDK (`game_api/v1`) before game code
+- ✅ Calls `firstFrameReady()` and `gameReady()` correctly
+- ✅ Respects `onPause` / `onResume`
+- ✅ Respects `isAudioEnabled` / `onAudioEnabledChange`
+- ✅ Uses only standard web APIs (no external network calls)
+- ✅ Responsive across all required aspect ratios
+- ✅ Maintains state on window resize
+- ✅ Touch + mouse/keyboard input
+- ✅ Small single-file footprint (well under size limits)
+- ✅ High score via `saveData` / `loadData` when available
+- ✅ Optional `sendScore` on game over
+
+### Testing with the Playables SDK Test Suite
+
+1. Go to the [YouTube Playables SDK Test Suite](https://developers.google.com/youtube/gaming/playables/reference/test_suite_guide)
+2. Serve this folder locally (e.g. `npx serve .` or any static server)
+3. Point the Test Suite at your local `index.html`
+4. Verify firstFrameReady, gameReady, pause/resume, audio, and scoring
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Project Structure
 
 ```
 Neon-Emoji-Runner/
-├── index.html          # Complete game (single file)
-└── README.md           # This file
+├── index.html      # Complete game (HTML + CSS + JS)
+└── README.md       # This file
 ```
 
 ---
 
-## 💡 Suggested Future Features (no monetization)
+## 💡 Future Feature Ideas (No Monetization)
 
-- Daily challenge mode
-- More neon emoji packs (unlockable themes)
-- Leaderboard (local only)
-- Power-ups (peek, freeze timer)
-- Particle trails on card flip
-- Dark / Light neon themes toggle
-- Accessibility: high-contrast mode + screen reader labels
+Here are cool ideas you can add next:
+
+- **Multiple characters** – unlock different emoji runners (cat, robot, alien…)
+- **Daily challenge seed** – same obstacle sequence for everyone that day
+- **Ghost runner** – race against your own previous best run
+- **Neon trails** – particle trail that follows the player
+- **Weather / zones** – rain, glitch zones, speed boost sections
+- **Achievements** – “Survive 60s”, “10x Combo”, “Collect 50 stars”
+- **Simple level themes** – switch neon color palette every 500 points
+- **Haptic feedback** – `navigator.vibrate` on mobile for jumps & hits
+- **Offline PWA** – add a service worker so it works without network
+- **Replay system** – record inputs and let players share short runs
 
 ---
 
-## 👤 Author
+## 👨‍💻 Author
 
 **Rahul Kumar**  
-GitHub: [Rahul08319](https://github.com/Rahul08319)  
-Email: Rahul08319@gmail.com
+GitHub: [Rahul08319](https://github.com/Rahul08319)
 
 ---
 
-<div align="center">
+## 📄 License
 
-Made with 💜 neon love
+MIT License – feel free to use, modify, and share.
 
-⭐ Star this repo if you enjoy the glow!
+```
+MIT License
 
-</div>
+Copyright (c) 2026 Rahul Kumar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
+
+---
+
+<p align="center">
+  <strong>Stay neon. Keep running.</strong> 🏃‍♂️💨
+</p>

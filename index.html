@@ -1,495 +1,932 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Neon Emoji Memory</title>
-  <script src="https://www.youtube.com/game_api/v1"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: #0a0a12;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      color: #fff;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    #canvas-bg {
-      position: fixed; inset: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
-    #app {
-      position: relative;
-      z-index: 1;
-      width: 100%; height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-    }
-    h1 {
-      font-size: clamp(1.4rem, 5vw, 2.4rem);
-      text-align: center;
-      color: #0ff;
-      text-shadow: 0 0 8px #0ff, 0 0 16px #0ff, 0 0 24px #f0f;
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-    }
-    #hud {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: clamp(0.75rem, 2.5vw, 1rem);
-      color: #0ff;
-      text-shadow: 0 0 6px #0ff;
-    }
-    #hud span { white-space: nowrap; }
-    #board {
-      display: grid;
-      gap: clamp(4px, 1.5vw, 10px);
-      background: rgba(0,0,0,0.55);
-      padding: clamp(8px, 2vw, 16px);
-      border-radius: 16px;
-      box-shadow: 0 0 20px #0ff, 0 0 40px #f0f44a22;
-      max-width: 96vw;
-      max-height: 70vh;
-    }
-    .card {
-      width: clamp(48px, 14vw, 90px);
-      height: clamp(48px, 14vw, 90px);
-      background: #16162a;
-      border: 2px solid #0ff;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(1.4rem, 5vw, 2.4rem);
-      cursor: pointer;
-      transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
-      box-shadow: 0 0 8px #0ff66, inset 0 0 8px #0ff22;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .card:active { transform: scale(0.95); }
-    .card.flipped, .card.matched {
-      background: #0ff;
-      color: #000;
-      transform: rotateY(180deg);
-      box-shadow: 0 0 18px #0ff, inset 0 0 12px #fff;
-    }
-    .card.matched {
-      border-color: #f0f;
-      animation: matchPulse 0.8s infinite alternate;
-    }
-    @keyframes matchPulse {
-      from { box-shadow: 0 0 12px #f0f, inset 0 0 8px #f0f; }
-      to   { box-shadow: 0 0 24px #f0f, inset 0 0 16px #f0f; }
-    }
-    #start-screen, #win-screen {
-      position: absolute;
-      inset: 0;
-      background: rgba(5,5,15,0.92);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
-      gap: 16px;
-      padding: 16px;
-      text-align: center;
-    }
-    #win-screen { display: none; }
-    .btn {
-      padding: 12px 28px;
-      font-size: clamp(1rem, 3.5vw, 1.3rem);
-      background: transparent;
-      border: 2px solid #0ff;
-      color: #0ff;
-      border-radius: 12px;
-      cursor: pointer;
-      text-shadow: 0 0 8px #0ff;
-      box-shadow: 0 0 14px #0ff;
-      transition: all 0.2s;
-      min-width: 140px;
-    }
-    .btn:hover, .btn:active {
-      background: #0ff;
-      color: #000;
-      box-shadow: 0 0 28px #0ff, 0 0 40px #f0f;
-    }
-    .btn.magenta {
-      border-color: #f0f;
-      color: #f0f;
-      box-shadow: 0 0 14px #f0f;
-    }
-    .btn.magenta:hover, .btn.magenta:active {
-      background: #f0f;
-      color: #000;
-    }
-    .diff-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    #combo {
-      position: absolute;
-      top: 12%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: clamp(1.2rem, 5vw, 2rem);
-      color: #ff0;
-      text-shadow: 0 0 12px #ff0, 0 0 24px #f80;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 15;
-      transition: opacity 0.3s;
-    }
-    #combo.show { opacity: 1; }
-    .hidden { display: none !important; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Neon Emoji Runner</title>
+    <!-- YouTube Playables SDK - MUST load before game code -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0a0a12;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            touch-action: none;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a12;
+        }
+
+        #gameArea {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            background: linear-gradient(180deg, #0a0a18 0%, #0d0d22 50%, #0a0a18 100%);
+            overflow: hidden;
+            border: none;
+        }
+
+        /* Animated neon grid */
+        #gameArea::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 8s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
+        }
+
+        /* Horizon glow */
+        #horizon {
+            position: absolute;
+            bottom: 28%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, #f0f, #0ff, transparent);
+            box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            z-index: 10;
+            will-change: transform, left, top;
+            filter: drop-shadow(0 0 6px currentColor);
+            transition: filter 0.2s;
+        }
+
+        .player {
+            z-index: 20;
+            font-size: clamp(2.2rem, 6vw, 3.2rem) !important;
+        }
+
+        .invincible {
+            animation: invinciblePulse 0.4s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px #0ff) drop-shadow(0 0 20px #fff) !important;
+        }
+
+        @keyframes invinciblePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            border-radius: 50%;
+            animation: particleFade 0.6s forwards;
+        }
+
+        @keyframes particleFade {
+            to { opacity: 0; transform: scale(0); }
+        }
+
+        /* UI Layer */
+        #uiLayer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        #scoreDisplay, #highScoreDisplay, #comboDisplay {
+            position: absolute;
+            color: #0ff;
+            font-weight: 700;
+            text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            letter-spacing: 1px;
+        }
+
+        #scoreDisplay { top: 12px; left: 14px; }
+        #highScoreDisplay { top: 12px; right: 14px; }
+        #comboDisplay {
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0;
+            text-shadow: 0 0 10px #ff0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #powerUpTimer {
+            position: absolute;
+            top: 48px;
+            left: 14px;
+            color: #0f0;
+            font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+            text-shadow: 0 0 8px #0f0;
+            opacity: 0;
+        }
+
+        /* Touch controls */
+        #touchControls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0.7;
+        }
+
+        .touchBtn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(0, 255, 255, 0.15);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            color: #0ff;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            transition: transform 0.1s, background 0.1s;
+        }
+
+        .touchBtn:active, .touchBtn.active {
+            transform: scale(0.92);
+            background: rgba(0, 255, 255, 0.35);
+        }
+
+        #jumpBtn {
+            margin: 0 auto;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 0, 255, 0.15);
+            border-color: rgba(255, 0, 255, 0.5);
+            color: #f0f;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 15, 0.92);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .overlay h1 {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            color: #0ff;
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .overlay p {
+            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+            color: #aaa;
+            max-width: 420px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .overlay .score-big {
+            font-size: clamp(1.6rem, 5vw, 2.4rem);
+            color: #ff0;
+            text-shadow: 0 0 12px #ff0;
+            margin: 16px 0;
+        }
+
+        .btn {
+            margin-top: 18px;
+            padding: 14px 36px;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #0ff, #08f);
+            color: #000;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            transition: transform 0.15s, box-shadow 0.15s;
+            pointer-events: auto;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover, .btn:active {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #f0f, #a0f);
+            margin-left: 12px;
+        }
+
+        #pauseOverlay { display: none; }
+        #gameOverOverlay { display: none; }
+        #startOverlay { display: flex; }
+
+        .hint {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .touchBtn { width: 58px; height: 58px; font-size: 1.4rem; }
+            #jumpBtn { width: 68px; height: 68px; }
+            #touchControls { bottom: 12px; padding: 0 12px; }
+        }
+
+        @media (min-width: 900px) {
+            #touchControls { display: none; }
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas-bg"></canvas>
-  <div id="app">
-    <h1>NEON EMOJI MEMORY</h1>
-    <div id="hud">
-      <span id="moves">Moves: 0</span>
-      <span id="timer">Time: 0s</span>
-      <span id="matches">Pairs: 0</span>
-      <span id="best">Best: —</span>
+    <div id="gameContainer">
+        <div id="gameArea">
+            <div id="horizon"></div>
+            <div id="uiLayer">
+                <div id="scoreDisplay">SCORE 0</div>
+                <div id="highScoreDisplay">BEST 0</div>
+                <div id="comboDisplay">COMBO x2</div>
+                <div id="powerUpTimer"></div>
+            </div>
+
+            <div id="touchControls">
+                <div class="touchBtn" id="leftBtn">◀</div>
+                <div class="touchBtn" id="jumpBtn">▲</div>
+                <div class="touchBtn" id="rightBtn">▶</div>
+            </div>
+
+            <!-- Start Screen -->
+            <div class="overlay" id="startOverlay">
+                <h1>NEON EMOJI RUNNER</h1>
+                <p>Dodge the obstacles • Collect stars • Survive the neon streets</p>
+                <p style="color:#0ff; margin-top:12px;">← → or buttons to move • ▲ / Space / Jump button to jump</p>
+                <button class="btn" id="startBtn">PLAY</button>
+                <p class="hint">Made by Rahul Kumar • YouTube Playables Ready</p>
+            </div>
+
+            <!-- Pause Screen -->
+            <div class="overlay" id="pauseOverlay">
+                <h1>PAUSED</h1>
+                <p>Take a breath in the neon city</p>
+                <button class="btn" id="resumeBtn">RESUME</button>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div class="overlay" id="gameOverOverlay">
+                <h1>GAME OVER</h1>
+                <div class="score-big" id="finalScore">0</div>
+                <p id="newBestText" style="color:#0f0; display:none;">NEW HIGH SCORE!</p>
+                <button class="btn" id="restartBtn">PLAY AGAIN</button>
+            </div>
+        </div>
     </div>
-    <div id="board"></div>
-    <div id="combo">COMBO x2!</div>
-  </div>
 
-  <div id="start-screen">
-    <h1>NEON EMOJI MEMORY</h1>
-    <p style="color:#0ff; text-shadow:0 0 8px #0ff; max-width:320px; font-size:0.95rem;">
-      Match the glowing neon emojis.<br>Tap or click two cards.
-    </p>
-    <div class="diff-row">
-      <button class="btn" data-diff="easy">Easy 4×4</button>
-      <button class="btn magenta" data-diff="normal">Normal 6×4</button>
-      <button class="btn" data-diff="hard">Hard 8×4</button>
-    </div>
-  </div>
+    <script>
+        // ========== YouTube Playables Integration ==========
+        const yt = (typeof ytgame !== 'undefined') ? ytgame : null;
+        const IN_PLAYABLES = yt && yt.IN_PLAYABLES_ENV;
 
-  <div id="win-screen">
-    <h1 style="color:#f0f; text-shadow:0 0 12px #f0f;">YOU WIN!</h1>
-    <p id="win-stats" style="font-size:1.1rem; color:#0ff;"></p>
-    <button class="btn magenta" id="play-again">Play Again</button>
-  </div>
+        // Audio state (respect YouTube mute)
+        let audioEnabled = true;
+        if (yt && yt.system) {
+            try {
+                audioEnabled = yt.system.isAudioEnabled();
+                yt.system.onAudioEnabledChange((enabled) => {
+                    audioEnabled = enabled;
+                    if (!enabled) stopAllSounds();
+                });
+            } catch (e) {}
+        }
 
-  <script>
-    // ========== YouTube Playables SDK helpers ==========
-    const yt = window.ytgame || null;
-    function firstFrame() {
-      try { yt && yt.game && yt.game.firstFrameReady(); } catch(e){}
-    }
-    function gameReady() {
-      try { yt && yt.game && yt.game.gameReady(); } catch(e){}
-    }
-    function saveHigh(data) {
-      try {
-        if (yt && yt.game && yt.game.saveData) {
-          yt.game.saveData(JSON.stringify(data));
+        // Pause / Resume from platform
+        let platformPaused = false;
+        if (yt && yt.system) {
+            try {
+                yt.system.onPause(() => {
+                    platformPaused = true;
+                    pauseGame(true);
+                });
+                yt.system.onResume(() => {
+                    platformPaused = false;
+                    if (gameState === 'playing') resumeGame(true);
+                });
+            } catch (e) {}
+        }
+
+        // ========== Audio (Web Audio API - no external files) ==========
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            return audioCtx;
+        }
+
+        function playTone(freq, type = 'sine', dur = 0.15, vol = 0.3) {
+            if (!audioEnabled) return;
+            try {
+                const ctx = getAudioCtx();
+                if (ctx.state === 'suspended') ctx.resume();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(vol, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + dur);
+            } catch (e) {}
+        }
+
+        function stopAllSounds() {
+            // Simple mute - tones are short lived
+        }
+
+        // ========== Game State ==========
+        const gameArea = document.getElementById('gameArea');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const highScoreDisplay = document.getElementById('highScoreDisplay');
+        const comboDisplay = document.getElementById('comboDisplay');
+        const powerUpTimer = document.getElementById('powerUpTimer');
+        const startOverlay = document.getElementById('startOverlay');
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const gameOverOverlay = document.getElementById('gameOverOverlay');
+        const finalScoreEl = document.getElementById('finalScore');
+        const newBestText = document.getElementById('newBestText');
+
+        let gameState = 'start'; // start | playing | paused | over
+        let score = 0;
+        let highScore = 0;
+        let combo = 0;
+        let lastObstaclePassed = 0;
+        let entities = [];
+        let particles = [];
+        let player = null;
+        let lastTime = 0;
+        let spawnTimer = 0;
+        let powerSpawnTimer = 0;
+        let difficulty = 1;
+        let invincibleUntil = 0;
+        let magnetUntil = 0;
+        let scoreInterval = null;
+        let rafId = null;
+        let keys = { left: false, right: false, jump: false };
+        let groundY = 0;
+        let areaW = 0;
+        let areaH = 0;
+
+        // Load high score
+        function loadHighScore() {
+            try {
+                if (yt && yt.game && yt.game.loadData) {
+                    yt.game.loadData().then(data => {
+                        if (data) {
+                            const parsed = JSON.parse(data);
+                            if (parsed.highScore) highScore = parsed.highScore;
+                        }
+                        highScoreDisplay.textContent = `BEST ${highScore}`;
+                    }).catch(() => {
+                        highScore = parseInt(localStorage.getItem('neonRunnerHS') || '0', 10);
+                        highScoreDisplay.textContent = `BEST ${highScore}`;
+                    });
+                } else {
+                    highScore = parseInt(localStorage.getItem('neonRunnerHS') || '0', 10);
+                    highScoreDisplay.textContent = `BEST ${highScore}`;
+                }
+            } catch (e) {
+                highScore = parseInt(localStorage.getItem('neonRunnerHS') || '0', 10);
+                highScoreDisplay.textContent = `BEST ${highScore}`;
+            }
+        }
+
+        function saveHighScore() {
+            try {
+                localStorage.setItem('neonRunnerHS', highScore.toString());
+                if (yt && yt.game && yt.game.saveData) {
+                    yt.game.saveData(JSON.stringify({ highScore })).catch(() => {});
+                }
+            } catch (e) {}
+        }
+
+        // ========== Entities ==========
+        function createPlayer() {
+            return {
+                id: 'player',
+                char: '🏃',
+                x: 80,
+                y: 0,
+                vy: 0,
+                width: 48,
+                height: 48,
+                speed: 320,
+                jumping: false,
+                grounded: true
+            };
+        }
+
+        const obstacleTypes = [
+            { char: '🧱', color: '#ff3355', points: 10 },
+            { char: '🚧', color: '#ffaa00', points: 12 },
+            { char: '🚨', color: '#ff00aa', points: 15 },
+            { char: '💣', color: '#ff5500', points: 20 },
+            { char: '⚡', color: '#00ffaa', points: 18 }
+        ];
+
+        const powerTypes = [
+            { char: '⭐', type: 'invincible', color: '#ffd700', duration: 5000 },
+            { char: '💫', type: 'magnet', color: '#00ffff', duration: 6000 },
+            { char: '🛡️', type: 'shield', color: '#00ff88', duration: 4000 }
+        ];
+
+        function spawnObstacle() {
+            const type = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+            const isFlying = Math.random() > 0.65;
+            entities.push({
+                id: 'obs_' + Date.now() + Math.random(),
+                char: type.char,
+                color: type.color,
+                x: areaW + 40,
+                y: isFlying ? groundY - 110 - Math.random() * 40 : groundY,
+                width: 40,
+                height: 40,
+                speed: 220 + difficulty * 35 + Math.random() * 40,
+                isObstacle: true,
+                points: type.points,
+                passed: false
+            });
+        }
+
+        function spawnPowerUp() {
+            const type = powerTypes[Math.floor(Math.random() * powerTypes.length)];
+            entities.push({
+                id: 'pwr_' + Date.now() + Math.random(),
+                char: type.char,
+                color: type.color,
+                x: areaW + 40,
+                y: groundY - 70 - Math.random() * 50,
+                width: 36,
+                height: 36,
+                speed: 180 + difficulty * 20,
+                isPowerUp: true,
+                powerType: type.type,
+                duration: type.duration
+            });
+        }
+
+        // ========== Rendering ==========
+        function render() {
+            // Clear dynamic elements
+            gameArea.querySelectorAll('.emoji, .particle').forEach(el => el.remove());
+
+            // Player
+            if (player) {
+                const el = document.createElement('span');
+                el.className = 'emoji player' + (Date.now() < invincibleUntil ? ' invincible' : '');
+                el.textContent = player.char;
+                el.style.left = player.x + 'px';
+                el.style.top = player.y + 'px';
+                el.style.color = Date.now() < invincibleUntil ? '#0ff' : '#0f0';
+                gameArea.appendChild(el);
+            }
+
+            // Entities
+            entities.forEach(e => {
+                const el = document.createElement('span');
+                el.className = 'emoji';
+                el.textContent = e.char;
+                el.style.left = e.x + 'px';
+                el.style.top = e.y + 'px';
+                el.style.color = e.color;
+                gameArea.appendChild(el);
+            });
+
+            // Particles
+            particles.forEach(p => {
+                const el = document.createElement('div');
+                el.className = 'particle';
+                el.style.left = p.x + 'px';
+                el.style.top = p.y + 'px';
+                el.style.width = p.size + 'px';
+                el.style.height = p.size + 'px';
+                el.style.background = p.color;
+                el.style.boxShadow = `0 0 ${p.size * 2}px ${p.color}`;
+                gameArea.appendChild(el);
+            });
+        }
+
+        function spawnParticles(x, y, color, count = 8) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x + (Math.random() - 0.5) * 20,
+                    y: y + (Math.random() - 0.5) * 20,
+                    vx: (Math.random() - 0.5) * 180,
+                    vy: (Math.random() - 0.5) * 180 - 40,
+                    size: 4 + Math.random() * 6,
+                    color,
+                    life: 0.5 + Math.random() * 0.3
+                });
+            }
+        }
+
+        // ========== Physics & Update ==========
+        function update(dt) {
+            if (gameState !== 'playing' || platformPaused) return;
+
+            const now = Date.now();
+
+            // Player movement
+            if (keys.left) player.x -= player.speed * dt;
+            if (keys.right) player.x += player.speed * dt;
+            player.x = Math.max(10, Math.min(areaW - player.width - 10, player.x));
+
+            // Jump physics
+            if (keys.jump && player.grounded) {
+                player.vy = -520;
+                player.grounded = false;
+                player.jumping = true;
+                playTone(520, 'sine', 0.12, 0.25);
+                spawnParticles(player.x + 20, player.y + 40, '#0f0', 6);
+            }
+            keys.jump = false; // one-shot
+
+            player.vy += 1600 * dt; // gravity
+            player.y += player.vy * dt;
+
+            if (player.y >= groundY) {
+                player.y = groundY;
+                player.vy = 0;
+                player.grounded = true;
+                player.jumping = false;
+            }
+
+            // Move entities
+            for (let i = entities.length - 1; i >= 0; i--) {
+                const e = entities[i];
+                e.x -= e.speed * dt;
+
+                // Magnet effect
+                if (e.isPowerUp && now < magnetUntil) {
+                    const dx = player.x - e.x;
+                    const dy = player.y - e.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 220) {
+                        e.x += dx * 4 * dt;
+                        e.y += dy * 4 * dt;
+                    }
+                }
+
+                // Passed obstacle for combo/score
+                if (e.isObstacle && !e.passed && e.x + e.width < player.x) {
+                    e.passed = true;
+                    combo++;
+                    score += e.points + combo * 2;
+                    lastObstaclePassed = now;
+                    updateScoreUI();
+                    if (combo >= 2) {
+                        comboDisplay.textContent = `COMBO x${combo}`;
+                        comboDisplay.style.opacity = '1';
+                    }
+                    playTone(700 + combo * 40, 'triangle', 0.08, 0.15);
+                }
+
+                // Remove off-screen
+                if (e.x < -60) {
+                    entities.splice(i, 1);
+                    if (e.isObstacle && !e.passed) {
+                        combo = 0;
+                        comboDisplay.style.opacity = '0';
+                    }
+                }
+            }
+
+            // Particles update
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.life -= dt;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            // Collision
+            checkCollisions(now);
+
+            // Spawning
+            spawnTimer -= dt;
+            if (spawnTimer <= 0) {
+                spawnObstacle();
+                spawnTimer = Math.max(0.7, 1.6 - difficulty * 0.12) + Math.random() * 0.4;
+            }
+
+            powerSpawnTimer -= dt;
+            if (powerSpawnTimer <= 0) {
+                if (Math.random() > 0.35) spawnPowerUp();
+                powerSpawnTimer = 7 + Math.random() * 5;
+            }
+
+            // Difficulty ramp
+            difficulty = 1 + score / 800;
+
+            // Power-up timers UI
+            if (now < invincibleUntil) {
+                const left = ((invincibleUntil - now) / 1000).toFixed(1);
+                powerUpTimer.textContent = `🛡 ${left}s`;
+                powerUpTimer.style.opacity = '1';
+                powerUpTimer.style.color = '#0ff';
+            } else if (now < magnetUntil) {
+                const left = ((magnetUntil - now) / 1000).toFixed(1);
+                powerUpTimer.textContent = `💫 ${left}s`;
+                powerUpTimer.style.opacity = '1';
+                powerUpTimer.style.color = '#0ff';
+            } else {
+                powerUpTimer.style.opacity = '0';
+            }
+
+            // Combo decay
+            if (now - lastObstaclePassed > 2500) {
+                combo = 0;
+                comboDisplay.style.opacity = '0';
+            }
+
+            render();
+        }
+
+        function checkCollisions(now) {
+            if (!player) return;
+            const px = player.x + 8;
+            const py = player.y + 8;
+            const pw = player.width - 16;
+            const ph = player.height - 16;
+
+            for (let i = entities.length - 1; i >= 0; i--) {
+                const e = entities[i];
+                const ex = e.x + 6;
+                const ey = e.y + 6;
+                const ew = e.width - 12;
+                const eh = e.height - 12;
+
+                if (px < ex + ew && px + pw > ex && py < ey + eh && py + ph > ey) {
+                    if (e.isPowerUp) {
+                        // Collect
+                        spawnParticles(e.x, e.y, e.color, 12);
+                        playTone(900, 'triangle', 0.25, 0.35);
+                        if (e.powerType === 'invincible' || e.powerType === 'shield') {
+                            invincibleUntil = now + e.duration;
+                        } else if (e.powerType === 'magnet') {
+                            magnetUntil = now + e.duration;
+                        }
+                        score += 50;
+                        updateScoreUI();
+                        entities.splice(i, 1);
+                    } else if (e.isObstacle) {
+                        if (now < invincibleUntil) {
+                            // Destroy obstacle while invincible
+                            spawnParticles(e.x, e.y, e.color, 10);
+                            playTone(400, 'square', 0.1, 0.2);
+                            score += e.points * 2;
+                            updateScoreUI();
+                            entities.splice(i, 1);
+                        } else {
+                            // Hit
+                            spawnParticles(player.x, player.y, '#ff0055', 16);
+                            playTone(120, 'sawtooth', 0.4, 0.4);
+                            gameOver();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        function updateScoreUI() {
+            scoreDisplay.textContent = `SCORE ${score}`;
+            if (score > highScore) {
+                highScore = score;
+                highScoreDisplay.textContent = `BEST ${highScore}`;
+            }
+        }
+
+        // ========== Game Loop ==========
+        function loop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+            lastTime = timestamp;
+
+            update(dt);
+            rafId = requestAnimationFrame(loop);
+        }
+
+        function resize() {
+            areaW = gameArea.clientWidth;
+            areaH = gameArea.clientHeight;
+            groundY = Math.floor(areaH * 0.72);
+            if (player) {
+                player.y = Math.min(player.y, groundY);
+                if (player.grounded) player.y = groundY;
+            }
+        }
+
+        // ========== Controls ==========
+        function bindControls() {
+            // Keyboard
+            window.addEventListener('keydown', e => {
+                if (e.repeat) return;
+                if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+                if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+                if (e.code === 'ArrowUp' || e.code === 'Space' || e.code === 'KeyW') {
+                    e.preventDefault();
+                    keys.jump = true;
+                }
+                if (e.code === 'Escape' || e.code === 'KeyP') {
+                    if (gameState === 'playing') pauseGame();
+                    else if (gameState === 'paused') resumeGame();
+                }
+            });
+            window.addEventListener('keyup', e => {
+                if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+                if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+            });
+
+            // Touch buttons
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            const jumpBtn = document.getElementById('jumpBtn');
+
+            function bindTouch(btn, onStart, onEnd) {
+                btn.addEventListener('touchstart', e => { e.preventDefault(); onStart(); btn.classList.add('active'); }, { passive: false });
+                btn.addEventListener('touchend', e => { e.preventDefault(); onEnd(); btn.classList.remove('active'); });
+                btn.addEventListener('touchcancel', () => { onEnd(); btn.classList.remove('active'); });
+                btn.addEventListener('mousedown', e => { e.preventDefault(); onStart(); btn.classList.add('active'); });
+                btn.addEventListener('mouseup', () => { onEnd(); btn.classList.remove('active'); });
+                btn.addEventListener('mouseleave', () => { onEnd(); btn.classList.remove('active'); });
+            }
+
+            bindTouch(leftBtn, () => keys.left = true, () => keys.left = false);
+            bindTouch(rightBtn, () => keys.right = true, () => keys.right = false);
+            bindTouch(jumpBtn, () => keys.jump = true, () => {});
+
+            // Buttons
+            document.getElementById('startBtn').addEventListener('click', startGame);
+            document.getElementById('resumeBtn').addEventListener('click', () => resumeGame());
+            document.getElementById('restartBtn').addEventListener('click', startGame);
+        }
+
+        // ========== State Transitions ==========
+        function startGame() {
+            score = 0;
+            combo = 0;
+            difficulty = 1;
+            entities = [];
+            particles = [];
+            invincibleUntil = 0;
+            magnetUntil = 0;
+            spawnTimer = 1.2;
+            powerSpawnTimer = 6;
+            lastObstaclePassed = 0;
+
+            resize();
+            player = createPlayer();
+            player.y = groundY;
+
+            startOverlay.style.display = 'none';
+            pauseOverlay.style.display = 'none';
+            gameOverOverlay.style.display = 'none';
+            comboDisplay.style.opacity = '0';
+            powerUpTimer.style.opacity = '0';
+
+            updateScoreUI();
+            gameState = 'playing';
+            lastTime = 0;
+
+            // Score tick
+            if (scoreInterval) clearInterval(scoreInterval);
+            scoreInterval = setInterval(() => {
+                if (gameState === 'playing' && !platformPaused) {
+                    score += 1;
+                    updateScoreUI();
+                }
+            }, 1000);
+
+            if (!rafId) rafId = requestAnimationFrame(loop);
+            playTone(440, 'sine', 0.2, 0.3);
+        }
+
+        function pauseGame(fromPlatform = false) {
+            if (gameState !== 'playing') return;
+            gameState = 'paused';
+            if (!fromPlatform) pauseOverlay.style.display = 'flex';
+        }
+
+        function resumeGame(fromPlatform = false) {
+            if (gameState !== 'paused') return;
+            if (platformPaused && !fromPlatform) return;
+            gameState = 'playing';
+            pauseOverlay.style.display = 'none';
+            lastTime = 0;
+        }
+
+        function gameOver() {
+            gameState = 'over';
+            if (scoreInterval) clearInterval(scoreInterval);
+
+            finalScoreEl.textContent = score;
+            if (score >= highScore && score > 0) {
+                newBestText.style.display = 'block';
+                saveHighScore();
+            } else {
+                newBestText.style.display = 'none';
+            }
+
+            // Optional: send score to YouTube
+            if (yt && yt.game && yt.game.sendScore) {
+                try { yt.game.sendScore({ value: score }); } catch (e) {}
+            }
+
+            gameOverOverlay.style.display = 'flex';
+        }
+
+        // ========== Init ==========
+        function init() {
+            resize();
+            window.addEventListener('resize', () => {
+                resize();
+                // Maintain state on resize (Playables requirement)
+            });
+            bindControls();
+            loadHighScore();
+
+            // Signal first frame to YouTube
+            if (yt && yt.game) {
+                try {
+                    yt.game.firstFrameReady();
+                } catch (e) {}
+            }
+
+            // Game is interactable (start screen)
+            if (yt && yt.game) {
+                try {
+                    yt.game.gameReady();
+                } catch (e) {}
+            }
+
+            // Start render loop for idle animation if needed
+            rafId = requestAnimationFrame(loop);
+        }
+
+        // Start when DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
         } else {
-          localStorage.setItem('neonEmojiBest', JSON.stringify(data));
+            init();
         }
-      } catch(e){}
-    }
-    async function loadHigh() {
-      try {
-        if (yt && yt.game && yt.game.loadData) {
-          const raw = await yt.game.loadData();
-          return raw ? JSON.parse(raw) : {};
-        }
-        return JSON.parse(localStorage.getItem('neonEmojiBest') || '{}');
-      } catch(e){ return {}; }
-    }
-
-    // Pause / Resume
-    let paused = false;
-    if (yt && yt.system) {
-      yt.system.onPause(() => { paused = true; stopTimer(); });
-      yt.system.onResume(() => { paused = false; if (gameStarted) startTimer(); });
-    }
-
-    // ========== Audio (Web Audio – no files) ==========
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-    function ensureAudio() {
-      if (!audioCtx) audioCtx = new AudioCtx();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-    function beep(freq=440, dur=0.08, type='square', vol=0.08) {
-      try {
-        ensureAudio();
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = type;
-        o.frequency.value = freq;
-        g.gain.value = vol;
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start();
-        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-        o.stop(audioCtx.currentTime + dur);
-      } catch(e){}
-    }
-    function playFlip()  { beep(520, 0.06, 'triangle', 0.06); }
-    function playMatch() { beep(780, 0.12, 'sine', 0.1); setTimeout(()=>beep(980,0.15,'sine',0.08),90); }
-    function playWin()   { [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine',0.1),i*120)); }
-    function playMiss()  { beep(220, 0.15, 'sawtooth', 0.05); }
-
-    // ========== Neon emoji set ==========
-    const ALL_EMOJIS = ['🪩','🌌','⚡️','🔥','🌃','🌠','💡','🎆','💿','🪐','🌩️','🧬','💎','🚀','🌈','✨','🔮','🪐','🌟','💫','🛸','🔋','📡','🧿'];
-    const emojiColors = {
-      '🪩':'#ff00ff','🌌':'#00b7eb','⚡️':'#ffff00','🔥':'#ff4500','🌃':'#9b59b6',
-      '🌠':'#00ff00','💡':'#ffd700','🎆':'#ff69b4','💿':'#c0c0c0','🪐':'#4682b4',
-      '🌩️':'#b0c4de','🧬':'#00fa9a','💎':'#00ffff','🚀':'#ff6b6b','🌈':'#ff9ff3',
-      '✨':'#feca57','🔮':'#a29bfe','🌟':'#ffeaa7','💫':'#74b9ff','🛸':'#55efc4',
-      '🔋':'#00b894','📡':'#0984e3','🧿':'#6c5ce7'
-    };
-
-    // ========== Canvas particles ==========
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-      constructor(emoji) {
-        this.emoji = emoji;
-        this.color = emojiColors[emoji] || '#0ff';
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = 18 + Math.random() * 22;
-        this.vx = (Math.random() - 0.5) * 0.6;
-        this.vy = (Math.random() - 0.5) * 0.6;
-        this.alpha = 0.25 + Math.random() * 0.35;
-      }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.x < -30) this.x = canvas.width + 30;
-        if (this.x > canvas.width + 30) this.x = -30;
-        if (this.y < -30) this.y = canvas.height + 30;
-        if (this.y > canvas.height + 30) this.y = -30;
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.font = `${this.size}px serif`;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 12;
-        ctx.fillText(this.emoji, this.x, this.y);
-        ctx.restore();
-      }
-    }
-    function spawnParticles(list, count=40) {
-      particles = [];
-      const src = list.length ? list : ALL_EMOJIS.slice(0,12);
-      for (let i=0; i<count; i++) {
-        particles.push(new Particle(src[i % src.length]));
-      }
-    }
-    function animLoop() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animLoop);
-    }
-    spawnParticles([]);
-    animLoop();
-
-    // ========== Game state ==========
-    let cards = [], flipped = [], matched = 0, moves = 0, lock = false;
-    let totalPairs = 0, gameStarted = false, timer = 0, timerId = null, combo = 0;
-    let bestScores = {};
-
-    const boardEl = document.getElementById('board');
-    const startScreen = document.getElementById('start-screen');
-    const winScreen = document.getElementById('win-screen');
-    const comboEl = document.getElementById('combo');
-
-    function shuffle(a) {
-      for (let i=a.length-1; i>0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i],a[j]] = [a[j],a[i]];
-      }
-      return a;
-    }
-
-    function updateHUD() {
-      document.getElementById('moves').textContent = `Moves: ${moves}`;
-      document.getElementById('timer').textContent = `Time: ${timer}s`;
-      document.getElementById('matches').textContent = `Pairs: ${matched}/${totalPairs}`;
-      const key = currentDiff;
-      const b = bestScores[key];
-      document.getElementById('best').textContent = b ? `Best: ${b.moves}m / ${b.time}s` : 'Best: —';
-    }
-
-    function startTimer() {
-      stopTimer();
-      timerId = setInterval(() => {
-        if (!paused) { timer++; updateHUD(); }
-      }, 1000);
-    }
-    function stopTimer() {
-      if (timerId) clearInterval(timerId);
-      timerId = null;
-    }
-
-    function showCombo() {
-      if (combo < 2) return;
-      comboEl.textContent = `COMBO x${combo}!`;
-      comboEl.classList.add('show');
-      setTimeout(() => comboEl.classList.remove('show'), 800);
-    }
-
-    function createBoard(diff) {
-      currentDiff = diff;
-      let cols, pairs;
-      if (diff === 'easy')   { cols = 4; pairs = 8; }
-      else if (diff === 'hard') { cols = 8; pairs = 16; }
-      else                    { cols = 6; pairs = 12; }
-
-      totalPairs = pairs;
-      const chosen = shuffle([...ALL_EMOJIS]).slice(0, pairs);
-      cards = shuffle([...chosen, ...chosen]);
-      boardEl.innerHTML = '';
-      boardEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-
-      cards.forEach((emoji, idx) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.emoji = emoji;
-        card.dataset.idx = idx;
-        card.addEventListener('click', () => flip(card));
-        boardEl.appendChild(card);
-      });
-
-      flipped = [];
-      matched = 0;
-      moves = 0;
-      timer = 0;
-      combo = 0;
-      lock = false;
-      gameStarted = true;
-      updateHUD();
-      startTimer();
-      spawnParticles(chosen, 50);
-    }
-
-    function flip(card) {
-      if (paused || lock || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-      ensureAudio();
-      playFlip();
-      card.classList.add('flipped');
-      card.textContent = card.dataset.emoji;
-      flipped.push(card);
-
-      if (flipped.length === 2) {
-        lock = true;
-        moves++;
-        updateHUD();
-        checkMatch();
-      }
-    }
-
-    function checkMatch() {
-      const [a, b] = flipped;
-      if (a.dataset.emoji === b.dataset.emoji) {
-        a.classList.add('matched');
-        b.classList.add('matched');
-        matched++;
-        combo++;
-        playMatch();
-        showCombo();
-        flipped = [];
-        lock = false;
-        updateHUD();
-        spawnParticles([a.dataset.emoji], 30);
-        if (matched === totalPairs) {
-          stopTimer();
-          playWin();
-          setTimeout(showWin, 600);
-        }
-      } else {
-        combo = 0;
-        playMiss();
-        setTimeout(() => {
-          a.classList.remove('flipped');
-          b.classList.remove('flipped');
-          a.textContent = '';
-          b.textContent = '';
-          flipped = [];
-          lock = false;
-        }, 700);
-      }
-    }
-
-    function showWin() {
-      const key = currentDiff;
-      const prev = bestScores[key];
-      let isNew = false;
-      if (!prev || moves < prev.moves || (moves === prev.moves && timer < prev.time)) {
-        bestScores[key] = { moves, time: timer };
-        saveHigh(bestScores);
-        isNew = true;
-      }
-      document.getElementById('win-stats').innerHTML =
-        `Moves: <b>${moves}</b> &nbsp;|&nbsp; Time: <b>${timer}s</b><br>` +
-        (isNew ? '<span style="color:#ff0">NEW BEST SCORE!</span>' : '');
-      winScreen.style.display = 'flex';
-    }
-
-    // ========== UI events ==========
-    let currentDiff = 'normal';
-    document.querySelectorAll('[data-diff]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        ensureAudio();
-        startScreen.classList.add('hidden');
-        createBoard(btn.dataset.diff);
-        gameReady(); // now interactive
-      });
-    });
-
-    document.getElementById('play-again').addEventListener('click', () => {
-      winScreen.style.display = 'none';
-      startScreen.classList.remove('hidden');
-      gameStarted = false;
-      stopTimer();
-    });
-
-    // Keyboard
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        if (!startScreen.classList.contains('hidden')) {
-          document.querySelector('[data-diff="normal"]').click();
-        } else if (winScreen.style.display === 'flex') {
-          document.getElementById('play-again').click();
-        }
-      }
-    });
-
-    // ========== Boot ==========
-    (async () => {
-      bestScores = await loadHigh();
-      firstFrame(); // splash is visible
-      // gameReady is called when user picks difficulty
-    })();
-  </script>
+    </script>
 </body>
 </html>
