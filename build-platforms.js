@@ -159,6 +159,19 @@ function buildAll() {
       });
     }
 
+    // Copy js folder (native-platform-bridge.js)
+    const JS_DIR = path.join(ROOT_DIR, 'js');
+    const targetJsDir = path.join(targetDir, 'js');
+    if (!fs.existsSync(targetJsDir)) {
+      fs.mkdirSync(targetJsDir, { recursive: true });
+    }
+    if (fs.existsSync(JS_DIR)) {
+      const jsFiles = fs.readdirSync(JS_DIR);
+      jsFiles.forEach(f => {
+        fs.copyFileSync(path.join(JS_DIR, f), path.join(targetJsDir, f));
+      });
+    }
+
     console.log(`  ✅ Generated: ${platform.name} -> platforms/${platform.id}/`);
   });
 

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Neon Emoji Runner | Official Apple Showcase</title>
+  <style>
+    :root {
+      --sf-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --system-cyan: #00ffcc;
+      --system-pink: #ff007f;
+      --system-purple: #9d00ff;
+      --system-gold: #ffcc00;
+      --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --apple-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: #000000;
+      color: #ffffff;
+      font-family: var(--sf-font);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: #000000;
+      line-height: 1.5;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-radial {
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(0, 255, 204, 0.12) 0%, rgba(255, 0, 127, 0.08) 45%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Apple Frosted Navbar */
+    nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 52px;
+      background: rgba(10, 10, 15, 0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 6vw, 80px);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #00ffcc;
+    }
+
+    @media (max-width: 680px) {
+      .nav-links { display: none; }
+    }
+
+    /* Apple Pill Button */
+    .apple-pill-btn {
+      background: #ffffff;
+      color: #000000;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s var(--apple-ease), box-shadow 0.2s;
+    }
+
+    .apple-pill-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+    }
+
+    .apple-pill-btn:active {
+      transform: scale(0.96);
+    }
+
+    .apple-btn-outline {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+    }
+
+    .apple-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(0, 255, 204, 0.4);
+      color: #00ffcc;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 80px 20px 40px 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 12px;
+      font-weight: 600;
+      color: #00ffcc;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-h1 {
+      font-size: clamp(2.8rem, 9vw, 5.2rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 75%, #00ffcc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.05rem, 3.2vw, 1.4rem);
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 680px;
+      margin-bottom: 34px;
+      font-weight: 400;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    /* Device Mockup */
+    .device-stage {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 80px auto;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .device-bezel {
+      background: #111116;
+      border: 3px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 30px 100px rgba(0, 255, 204, 0.25),
+        0 10px 40px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      border-radius: 36px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+
+    .device-bezel iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Section Styling */
+    section {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto 100px auto;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      color: #00ffcc;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    /* Apple Bento Grid */
+    .bento-showcase {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 840px) {
+      .bento-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bento-box {
+      background: rgba(18, 12, 30, 0.6);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 34px 28px;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 20px 48px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.3s var(--apple-spring), border-color 0.2s, box-shadow 0.3s;
+    }
+
+    .bento-box:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(0, 255, 204, 0.4);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 24px 60px rgba(0, 255, 204, 0.2);
+    }
+
+    .bento-span-2 {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 840px) {
+      .bento-span-2 {
+        grid-column: span 1;
+      }
+    }
+
+    .bento-card-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .bento-card-desc {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .bento-icon-lg {
+      font-size: 42px;
+      margin-bottom: 16px;
+    }
+
+    /* Platform Grid */
+    .platform-hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .platform-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s var(--apple-spring), border-color 0.2s;
+    }
+
+    .platform-card:hover {
+      transform: translateY(-3px);
+      border-color: #00ffcc;
+    }
+
+    .platform-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .platform-icon {
+      font-size: 28px;
+    }
+
+    .platform-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: #ffffff;
+    }
+
+    .platform-sdk {
+      font-size: 11px;
+      color: #00ffcc;
+    }
+
+    .platform-download-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, color 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      margin-top: 14px;
+    }
+
+    .platform-download-btn:hover {
+      background: #00ffcc;
+      color: #000000;
+      border-color: #00ffcc;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient-radial"></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-brand">
+    <span>⚡</span> NEON EMOJI RUNNER
+  </a>
+  <ul class="nav-links">
+    <li><a href="#demo">Live Demo</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#platforms">Platform Hub</a></li>
+    <li><a href="https://github.com/Rahul08319/Neon-Emoji-Runner" target="_blank">GitHub</a></li>
+  </ul>
+  <a href="../index.html" class="apple-pill-btn">
+    ▶ Play Game
+  </a>
+</nav>
+
+<!-- HERO SECTION -->
+<div class="hero">
+  <div class="badge-pill">
+    <span>🍎</span> APPLE FLUID DESIGN • ZERO DEPENDENCIES
+  </div>
+  <h1 class="hero-h1">Pure Glow.<br>Infinite Velocity.</h1>
+  <p class="hero-sub">
+    High-octane neon arcade runner designed with Apple Human Interface standards, Liquid Glass materials, Dynamic Island HUD, and official native SDKs for all 12 major gaming platforms.
+  </p>
+  <div class="hero-actions">
+    <a href="../index.html" class="apple-pill-btn" style="padding: 12px 28px; font-size: 15px;">
+      ▶ Launch Fullscreen Game
+    </a>
+    <a href="#platforms" class="apple-pill-btn apple-btn-outline" style="padding: 12px 28px; font-size: 15px;">
+      📦 Download Platform Zips
+    </a>
+  </div>
+</div>
+
+<!-- LIVE PLAYABLE DEMO STAGE -->
+<div class="device-stage" id="demo">
+  <div class="device-bezel">
+    <iframe src="../index.html" title="Neon Emoji Runner Live Demo"></iframe>
+  </div>
+</div>
+
+<!-- APPLE BENTO SHOWCASE -->
+<section id="features">
+  <div class="section-header">
+    <div class="section-eyebrow">Architecture & Aesthetics</div>
+    <h2 class="section-title">Engineered to Apple Standards.</h2>
+  </div>
+
+  <div class="bento-showcase">
+    <!-- Bento 1 -->
+    <div class="bento-box bento-span-2">
+      <div class="bento-icon-lg">💎</div>
+      <div>
+        <h3 class="bento-card-title">Apple Liquid Glass Materials</h3>
+        <p class="bento-card-desc">
+          Translucent frosted panels with 32px backdrop blur, 210% saturation boost, specular inner edge highlights, and G2 continuous curvature squircles.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bento 2 -->
+    <div class="bento-box">
+      <div class="bento-icon-lg">🏝️</div>
+      <div>
+        <h3 class="bento-card-title">Dynamic Island HUD</h3>
+        <p class="bento-card-desc">
+          Interactive morphing pill that springs dynamically during combo streaks, level-ups, and life checks.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bento 3 -->
+    <div class="bento-box">
+      <div class="bento-icon-lg">⚡</div>
+      <div>
+        <h3 class="bento-card-title">60 FPS Kinetic Physics</h3>
+        <p class="bento-card-desc">
+          Zero-latency omnidirectional vector physics with momentum damping and responsive keyboard + touch D-Pad controls.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bento 4 -->
+    <div class="bento-box">
+      <div class="bento-icon-lg">🔊</div>
+      <div>
+        <h3 class="bento-card-title">Procedural Web Audio</h3>
+        <p class="bento-card-desc">
+          Synthesized harmonic oscillators with Apple smooth attack/decay curves. Respects platform muting instantly.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bento 5 -->
+    <div class="bento-box">
+      <div class="bento-icon-lg">📦</div>
+      <div>
+        <h3 class="bento-card-title">Zero Dependencies</h3>
+        <p class="bento-card-desc">
+          Ultra-lightweight ~28 KB total bundle. Instantaneous cold boot on mobile, desktop, and embedded WebViews.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM HUB -->
+<section id="platforms">
+  <div class="section-header">
+    <div class="section-eyebrow">Distribution Portal</div>
+    <h2 class="section-title">12 Native Platform Releases.</h2>
+    <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">
+      100% Native Official SDKs — Zero Playgama or third-party middleware dependencies.
+    </p>
+  </div>
+
+  <div class="platform-hub-grid">
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">📺</div>
+        <div>
+          <div class="platform-name">YouTube Playables</div>
+          <div class="platform-sdk">Playables SDK v1</div>
+        </div>
+      </div>
+      <a href="../releases/youtube-playables.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">📘</div>
+        <div>
+          <div class="platform-name">Facebook Instant</div>
+          <div class="platform-sdk">FBInstant SDK v6.3</div>
+        </div>
+      </div>
+      <a href="../releases/facebook-instant-games.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🦊</div>
+        <div>
+          <div class="platform-name">Poki</div>
+          <div class="platform-sdk">PokiSDK v2</div>
+        </div>
+      </div>
+      <a href="../releases/poki.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🕹️</div>
+        <div>
+          <div class="platform-name">CrazyGames</div>
+          <div class="platform-sdk">CrazyGames SDK v3</div>
+        </div>
+      </div>
+      <a href="../releases/crazygames.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🎮</div>
+        <div>
+          <div class="platform-name">Yandex Games</div>
+          <div class="platform-sdk">YaGames SDK v2</div>
+        </div>
+      </div>
+      <a href="../releases/yandex-games.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🌐</div>
+        <div>
+          <div class="platform-name">GameDistribution</div>
+          <div class="platform-sdk">GD SDK HTML5</div>
+        </div>
+      </div>
+      <a href="../releases/game-distribution.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">💬</div>
+        <div>
+          <div class="platform-name">Discord Activities</div>
+          <div class="platform-sdk">Embedded App SDK</div>
+        </div>
+      </div>
+      <a href="../releases/discord-activities.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">📱</div>
+        <div>
+          <div class="platform-name">JioGames</div>
+          <div class="platform-sdk">JioGames HTML5 SDK</div>
+        </div>
+      </div>
+      <a href="../releases/jiogames.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🎯</div>
+        <div>
+          <div class="platform-name">Y8 Games</div>
+          <div class="platform-sdk">Official Y8 SDK</div>
+        </div>
+      </div>
+      <a href="../releases/y8.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🚀</div>
+        <div>
+          <div class="platform-name">Lagged</div>
+          <div class="platform-sdk">Lagged API v2</div>
+        </div>
+      </div>
+      <a href="../releases/lagged.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🛍️</div>
+        <div>
+          <div class="platform-name">Microsoft Store</div>
+          <div class="platform-sdk">PWA / manifest.json</div>
+        </div>
+      </div>
+      <a href="../releases/microsoft-store.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+
+    <div class="platform-card">
+      <div class="platform-card-header">
+        <div class="platform-icon">🌍</div>
+        <div>
+          <div class="platform-name">Web Standalone</div>
+          <div class="platform-sdk">HTML5 / LocalStorage</div>
+        </div>
+      </div>
+      <a href="../releases/web-standalone.zip" class="platform-download-btn">Download .ZIP</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Neon Emoji Runner • Crafted with ❤️ by Rahul Kumar</p>
+  <p style="margin-top: 6px;">Open source under the MIT License • Built with Apple Fluid Design & Native SDK Bridges</p>
+</footer>
+
+</body>
+</html>

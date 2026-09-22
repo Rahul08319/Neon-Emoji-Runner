@@ -12,21 +12,23 @@
   <img src="https://img.shields.io/badge/Pure%20JS-Zero%20Dependencies-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="Zero Dependencies">
   <img src="https://img.shields.io/badge/Payload-28%20KB%20Ultra%20Light-00d2ff?style=for-the-badge" alt="Ultra Light">
   <img src="https://img.shields.io/badge/Created%20by-Rahul%20Kumar-ff007f?style=for-the-badge" alt="Author">
+  <img src="https://img.shields.io/badge/Apple%20Design-Fluid%20%26%20Liquid%20Glass-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Apple Design">
   <img src="https://img.shields.io/badge/License-MIT-00ffcc?style=for-the-badge" alt="MIT License">
 </p>
 
 <p align="center">
-  <strong>An ultra-fast, neon-soaked cyberpunk arcade runner engineered for the web and fully certified for Google YouTube Playables with native Monetization, Cloud Persistence, and Dynamic Audio.</strong>
+  <strong>An ultra-fast, neon-soaked cyberpunk arcade runner engineered with Apple Human Interface standards, Liquid Glass materials, Dynamic Island HUD, and native platform SDKs for all 12 major gaming portals.</strong>
 </p>
 
 <p align="center">
+  <a href="site/index.html">🍏 Apple Showcase Site</a> •
   <a href="#-features">✨ Features</a> •
   <a href="#-game-modes">🎮 Game Modes</a> •
   <a href="#-gameplay-preview">🕹️ Gameplay Preview</a> •
+  <a href="#-native-multi-platform-distribution-hub">🌐 Platform Hub</a> •
   <a href="#-youtube-playables-sdk-integration">📺 YouTube SDK</a> •
   <a href="#-monetization--ads">💰 Monetization</a> •
   <a href="#-controls--input">⌨️ Controls</a> •
-  <a href="#-certification--testing">🧪 Test Suite</a> •
   <a href="#-quick-start">🚀 Run Locally</a>
 </p>
 
