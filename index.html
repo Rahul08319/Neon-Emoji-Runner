@@ -1,137 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Neon Emoji Runner</title>
-  <!-- YouTube Playables SDK MUST load before any game code -->
-  <script src="https://www.youtube.com/game_api/v1"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-    html,body{width:100%;height:100%;overflow:hidden;background:#05050f;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;touch-action:none}
-    #gameContainer{position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#05050f}
-    #gameArea{position:relative;width:100%;height:100%;max-width:100vw;max-height:100vh;background:linear-gradient(180deg,#06061a 0%,#0c0c28 45%,#06061a 100%);overflow:hidden}
-    #gameArea::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,255,.06) 1px,transparent 1px);background-size:36px 36px;animation:gridMove 10s linear infinite;pointer-events:none;z-index:0}
-    @keyframes gridMove{0%{background-position:0 0}100%{background-position:0 36px}}
-    #horizon{position:absolute;bottom:26%;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#0ff,#f0f,#0ff,transparent);box-shadow:0 0 18px #0ff,0 0 36px #0ff;opacity:.55;z-index:1}
-    .emoji{position:absolute;font-size:clamp(1.7rem,4.8vw,2.7rem);z-index:10;will-change:transform,left,top;filter:drop-shadow(0 0 7px currentColor);transition:filter .15s}
-    .player{z-index:25;font-size:clamp(2.1rem,5.8vw,3.1rem)!important}
-    .invincible{animation:invPulse .35s ease-in-out infinite;filter:drop-shadow(0 0 14px #0ff) drop-shadow(0 0 22px #fff)!important}
-    @keyframes invPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.88}}
-    .particle{position:absolute;pointer-events:none;z-index:5;border-radius:50%;animation:pFade .55s forwards}
-    @keyframes pFade{to{opacity:0;transform:scale(0)}}
-    #uiLayer{position:absolute;inset:0;pointer-events:none;z-index:50}
-    #scoreDisplay,#highScoreDisplay,#comboDisplay{position:absolute;color:#0ff;font-weight:700;text-shadow:0 0 8px #0ff,0 0 16px #0ff;font-size:clamp(1rem,2.9vw,1.35rem);letter-spacing:1px}
-    #scoreDisplay{top:12px;left:14px}
-    #highScoreDisplay{top:12px;right:14px}
-    #comboDisplay{top:46px;left:50%;transform:translateX(-50%);color:#ff0;text-shadow:0 0 10px #ff0;opacity:0;transition:opacity .25s}
-    #powerUpTimer{position:absolute;top:46px;left:14px;color:#0f0;font-size:clamp(.78rem,2.4vw,1.05rem);text-shadow:0 0 8px #0f0;opacity:0}
-    #touchControls{position:absolute;bottom:18px;left:0;width:100%;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none;z-index:40;opacity:.75}
-    .touchBtn{width:68px;height:68px;border-radius:50%;background:rgba(0,255,255,.14);border:2px solid rgba(0,255,255,.5);color:#0ff;font-size:1.7rem;display:flex;align-items:center;justify-content:center;pointer-events:auto;box-shadow:0 0 14px rgba(0,255,255,.28);transition:transform .1s,background .1s}
-    .touchBtn:active,.touchBtn.active{transform:scale(.92);background:rgba(0,255,255,.32)}
-    #jumpBtn{margin:0 auto;width:78px;height:78px;background:rgba(255,0,255,.14);border-color:rgba(255,0,255,.5);color:#f0f;box-shadow:0 0 14px rgba(255,0,255,.28)}
-    .overlay{position:absolute;inset:0;background:rgba(4,4,14,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;color:#fff;text-align:center;padding:20px}
-    .overlay h1{font-size:clamp(1.7rem,5.8vw,2.9rem);color:#0ff;text-shadow:0 0 16px #0ff,0 0 32px #0ff;margin-bottom:10px;letter-spacing:2px}
-    .overlay p{font-size:clamp(.92rem,2.7vw,1.12rem);color:#aaa;max-width:400px;margin-bottom:6px;line-height:1.45}
-    .overlay .score-big{font-size:clamp(1.5rem,4.8vw,2.3rem);color:#ff0;text-shadow:0 0 12px #ff0;margin:14px 0}
-    .btn{margin-top:16px;padding:13px 34px;font-size:clamp(.95rem,2.9vw,1.2rem);font-weight:700;background:linear-gradient(135deg,#0ff,#08f);color:#000;border:none;border-radius:40px;cursor:pointer;box-shadow:0 0 20px rgba(0,255,255,.5);transition:transform .15s,box-shadow .15s;pointer-events:auto;letter-spacing:1px}
-    .btn:hover,.btn:active{transform:scale(1.05);box-shadow:0 0 30px rgba(0,255,255,.8)}
-    .btn.secondary{background:linear-gradient(135deg,#f0f,#a0f);margin-left:10px}
-    #pauseOverlay,#gameOverOverlay{display:none}
-    #startOverlay{display:flex}
-    .hint{margin-top:22px;font-size:.82rem;color:#555}
-    @media(max-width:500px){.touchBtn{width:56px;height:56px;font-size:1.35rem}#jumpBtn{width:66px;height:66px}#touchControls{bottom:10px;padding:0 10px}}
-    @media(min-width:900px){#touchControls{display:none}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Neon Emoji Runner</title>
+    <!-- YouTube Playables SDK MUST load before any game code -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+        html,body{width:100%;height:100%;overflow:hidden;background:#05050c;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;touch-action:none}
+        #gameContainer{position:relative;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#05050c}
+        #gameArea{position:relative;width:100%;height:100%;max-width:100vw;max-height:100vh;background:linear-gradient(180deg,#060612 0%,#0b0b1e 45%,#08081a 100%);overflow:hidden}
+        #gameArea::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,255,.06) 1px,transparent 1px);background-size:36px 36px;animation:gridMove 7s linear infinite;pointer-events:none;z-index:0}
+        @keyframes gridMove{0%{background-position:0 0}100%{background-position:0 36px}}
+        #horizon{position:absolute;bottom:26%;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#0ff,#f0f,#0ff,transparent);box-shadow:0 0 18px #0ff,0 0 36px #0ff;opacity:.55;z-index:1}
+        .emoji{position:absolute;font-size:clamp(1.7rem,4.8vw,2.7rem);z-index:10;will-change:transform,left,top;filter:drop-shadow(0 0 5px currentColor)}
+        .player{z-index:25;font-size:clamp(2.1rem,5.8vw,3.1rem)!important}
+        .invincible{animation:invPulse .35s ease-in-out infinite;filter:drop-shadow(0 0 14px #0ff) drop-shadow(0 0 22px #fff)!important}
+        @keyframes invPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.88}}
+        .particle{position:absolute;pointer-events:none;z-index:5;border-radius:50%}
+        #uiLayer{position:absolute;inset:0;pointer-events:none;z-index:50}
+        #scoreDisplay,#highScoreDisplay,#comboDisplay{position:absolute;color:#0ff;font-weight:700;text-shadow:0 0 8px #0ff,0 0 16px #0ff;font-size:clamp(1rem,2.9vw,1.35rem);letter-spacing:1px}
+        #scoreDisplay{top:12px;left:14px}#highScoreDisplay{top:12px;right:14px}
+        #comboDisplay{top:46px;left:50%;transform:translateX(-50%);color:#ff0;text-shadow:0 0 10px #ff0;opacity:0;transition:opacity .25s}
+        #powerUpTimer{position:absolute;top:46px;left:14px;color:#0f0;font-size:clamp(.8rem,2.4vw,1.05rem);text-shadow:0 0 8px #0f0;opacity:0}
+        #touchControls{position:absolute;bottom:18px;left:0;width:100%;display:flex;justify-content:space-between;padding:0 18px;pointer-events:none;z-index:40;opacity:.75}
+        .touchBtn{width:68px;height:68px;border-radius:50%;background:rgba(0,255,255,.14);border:2px solid rgba(0,255,255,.45);color:#0ff;font-size:1.7rem;display:flex;align-items:center;justify-content:center;pointer-events:auto;box-shadow:0 0 14px rgba(0,255,255,.28);transition:transform .1s,background .1s}
+        .touchBtn:active,.touchBtn.active{transform:scale(.92);background:rgba(0,255,255,.32)}
+        #jumpBtn{margin:0 auto;width:78px;height:78px;background:rgba(255,0,255,.14);border-color:rgba(255,0,255,.45);color:#f0f;box-shadow:0 0 14px rgba(255,0,255,.28)}
+        .overlay{position:absolute;inset:0;background:rgba(4,4,12,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;color:#fff;text-align:center;padding:20px}
+        .overlay h1{font-size:clamp(1.7rem,5.8vw,2.9rem);color:#0ff;text-shadow:0 0 14px #0ff,0 0 28px #0ff;margin-bottom:10px;letter-spacing:2px}
+        .overlay p{font-size:clamp(.92rem,2.7vw,1.12rem);color:#aaa;max-width:400px;margin-bottom:6px;line-height:1.45}
+        .overlay .score-big{font-size:clamp(1.5rem,4.8vw,2.3rem);color:#ff0;text-shadow:0 0 12px #ff0;margin:14px 0}
+        .btn{margin-top:16px;padding:13px 34px;font-size:clamp(1rem,2.9vw,1.2rem);font-weight:700;background:linear-gradient(135deg,#0ff,#08f);color:#000;border:none;border-radius:40px;cursor:pointer;box-shadow:0 0 18px rgba(0,255,255,.45);transition:transform .15s,box-shadow .15s;pointer-events:auto;letter-spacing:1px}
+        .btn:hover,.btn:active{transform:scale(1.05);box-shadow:0 0 28px rgba(0,255,255,.75)}
+        #pauseOverlay,#gameOverOverlay{display:none}#startOverlay{display:flex}
+        .hint{margin-top:20px;font-size:.82rem;color:#555}
+        @media(max-width:500px){.touchBtn{width:56px;height:56px;font-size:1.35rem}#jumpBtn{width:66px;height:66px}#touchControls{bottom:10px;padding:0 10px}}
+        @media(min-width:900px){#touchControls{display:none}}
+        .shake{animation:shake .4s ease}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+    </style>
 </head>
 <body>
-  <div id="gameContainer">
+<div id="gameContainer">
     <div id="gameArea">
-      <div id="horizon"></div>
-      <div id="uiLayer">
-        <div id="scoreDisplay">SCORE 0</div>
-        <div id="highScoreDisplay">BEST 0</div>
-        <div id="comboDisplay">COMBO x2</div>
-        <div id="powerUpTimer"></div>
-      </div>
-      <div id="touchControls">
-        <div class="touchBtn" id="leftBtn">◀</div>
-        <div class="touchBtn" id="jumpBtn">▲</div>
-        <div class="touchBtn" id="rightBtn">▶</div>
-      </div>
-      <div class="overlay" id="startOverlay">
-        <h1>NEON EMOJI RUNNER</h1>
-        <p>Dodge obstacles • Collect power-ups • Survive the neon streets</p>
-        <p style="color:#0ff;margin-top:10px">← → / A D to move • Space / ▲ to jump</p>
-        <button class="btn" id="startBtn">PLAY</button>
-        <p class="hint">Made by Rahul Kumar • YouTube Playables Ready</p>
-      </div>
-      <div class="overlay" id="pauseOverlay">
-        <h1>PAUSED</h1>
-        <p>Neon city is waiting…</p>
-        <button class="btn" id="resumeBtn">RESUME</button>
-      </div>
-      <div class="overlay" id="gameOverOverlay">
-        <h1>GAME OVER</h1>
-        <div class="score-big" id="finalScore">0</div>
-        <p id="newBestText" style="color:#0f0;display:none">NEW HIGH SCORE!</p>
-        <button class="btn" id="restartBtn">PLAY AGAIN</button>
-      </div>
+        <div id="horizon"></div>
+        <div id="uiLayer">
+            <div id="scoreDisplay">SCORE 0</div>
+            <div id="highScoreDisplay">BEST 0</div>
+            <div id="comboDisplay">COMBO x2</div>
+            <div id="powerUpTimer"></div>
+        </div>
+        <div id="touchControls">
+            <div class="touchBtn" id="leftBtn">◀</div>
+            <div class="touchBtn" id="jumpBtn">▲</div>
+            <div class="touchBtn" id="rightBtn">▶</div>
+        </div>
+        <div class="overlay" id="startOverlay">
+            <h1>NEON EMOJI RUNNER</h1>
+            <p>Dodge obstacles • Collect power-ups • Chain combos</p>
+            <p style="color:#0ff;margin-top:10px">← → / A D to move • ▲ / Space / Jump to jump</p>
+            <button class="btn" id="startBtn">PLAY</button>
+            <p class="hint">Rahul Kumar • YouTube Playables Ready</p>
+        </div>
+        <div class="overlay" id="pauseOverlay">
+            <h1>PAUSED</h1>
+            <p>Neon city is waiting</p>
+            <button class="btn" id="resumeBtn">RESUME</button>
+        </div>
+        <div class="overlay" id="gameOverOverlay">
+            <h1>GAME OVER</h1>
+            <div class="score-big" id="finalScore">0</div>
+            <p id="newBestText" style="color:#0f0;display:none">NEW HIGH SCORE!</p>
+            <button class="btn" id="restartBtn">PLAY AGAIN</button>
+        </div>
     </div>
-  </div>
-
+</div>
 <script>
-/* ========== YouTube Playables SDK (official) ========== */
+/* ========== YouTube Playables SDK ========== */
 const yt = (typeof ytgame !== 'undefined') ? ytgame : null;
-const IN_PLAYABLES = !!(yt && yt.IN_PLAYABLES_ENV);
-
 let audioEnabled = true;
 let platformPaused = false;
-let dataLoaded = false;          // must await loadData before saveData
-let pendingSave = null;
 
 if (yt && yt.system) {
-  try {
-    audioEnabled = yt.system.isAudioEnabled();
-    yt.system.onAudioEnabledChange(enabled => {
-      audioEnabled = enabled;
-    });
-    yt.system.onPause(() => {
-      platformPaused = true;
-      pauseGame(true);
-    });
-    yt.system.onResume(() => {
-      platformPaused = false;
-      if (gameState === 'paused') resumeGame(true);
-    });
-  } catch (e) {}
+    try {
+        audioEnabled = yt.system.isAudioEnabled();
+        yt.system.onAudioEnabledChange(e => { audioEnabled = e; });
+        yt.system.onPause(() => { platformPaused = true; pauseGame(true); });
+        yt.system.onResume(() => { platformPaused = false; if (gameState === 'playing') resumeGame(true); });
+    } catch (e) {}
 }
 
-/* ========== Tiny procedural audio (respects mute) ========== */
+/* ========== Audio ========== */
 let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
+function getCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
 }
-function playTone(freq, type = 'sine', dur = 0.12, vol = 0.25) {
-  if (!audioEnabled) return;
-  try {
-    const ctx = getAudioCtx();
-    if (ctx.state === 'suspended') ctx.resume();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = type;
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(vol, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + dur);
-  } catch (e) {}
+function playTone(freq, type='sine', dur=0.14, vol=0.28) {
+    if (!audioEnabled) return;
+    try {
+        const ctx = getCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = type; o.frequency.value = freq;
+        g.gain.setValueAtTime(vol, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + dur);
+    } catch (e) {}
 }
 
-/* ========== Game state ========== */
+/* ========== State ========== */
 const gameArea = document.getElementById('gameArea');
 const scoreDisplay = document.getElementById('scoreDisplay');
 const highScoreDisplay = document.getElementById('highScoreDisplay');
@@ -144,494 +125,290 @@ const finalScoreEl = document.getElementById('finalScore');
 const newBestText = document.getElementById('newBestText');
 
 let gameState = 'start';
-let score = 0;
-let highScore = 0;
-let combo = 0;
-let entities = [];
-let particles = [];
-let player = null;
-let lastTime = 0;
-let spawnTimer = 0;
-let powerSpawnTimer = 0;
-let difficulty = 1;
-let invincibleUntil = 0;
-let magnetUntil = 0;
-let shieldUntil = 0;
-let scoreInterval = null;
-let rafId = null;
-let keys = { left: false, right: false, jump: false };
-let groundY = 0;
-let areaW = 0;
-let areaH = 0;
+let score = 0, highScore = 0, combo = 0, lastPassed = 0;
+let entities = [], particles = [], trail = [];
+let player = null, lastTime = 0, spawnT = 0, powerT = 0, difficulty = 1;
+let invUntil = 0, magUntil = 0, scoreInt = null, rafId = null;
+let keys = {left:false,right:false,jump:false};
+let groundY = 0, areaW = 0, areaH = 0;
+let shakeUntil = 0;
 
-/* ========== Cloud save (correct order) ========== */
-function loadHighScore() {
-  return new Promise(resolve => {
-    const fallback = () => {
-      highScore = parseInt(localStorage.getItem('neonRunnerHS') || '0', 10);
-      highScoreDisplay.textContent = `BEST ${highScore}`;
-      dataLoaded = true;
-      resolve();
-    };
-    if (yt && yt.game && yt.game.loadData) {
-      yt.game.loadData().then(raw => {
-        try {
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (typeof parsed.highScore === 'number') highScore = parsed.highScore;
-          }
-        } catch (e) {}
-        highScoreDisplay.textContent = `BEST ${highScore}`;
-        dataLoaded = true;
-        if (pendingSave) { saveHighScore(); pendingSave = null; }
-        resolve();
-      }).catch(fallback);
-    } else {
-      fallback();
-    }
-  });
-}
-
-function saveHighScore() {
-  if (!dataLoaded) {
-    pendingSave = true;
-    return;
-  }
-  try {
-    localStorage.setItem('neonRunnerHS', String(highScore));
-    if (yt && yt.game && yt.game.saveData) {
-      yt.game.saveData(JSON.stringify({ highScore })).catch(() => {});
-    }
-  } catch (e) {}
-}
-
-function sendBestScore(val) {
-  if (yt && yt.engagement && yt.engagement.sendScore) {
+function loadHS() {
     try {
-      yt.engagement.sendScore({ value: Math.floor(val) });
-    } catch (e) {}
-  }
-}
-
-/* ========== Entities ========== */
-function createPlayer() {
-  return {
-    id: 'player',
-    char: '🏃',
-    x: 80,
-    y: 0,
-    vy: 0,
-    width: 48,
-    height: 48,
-    speed: 320,
-    jumping: false,
-    grounded: true
-  };
-}
-
-const obstacleTypes = [
-  { char: '🧱', color: '#ff3355', points: 10 },
-  { char: '🚧', color: '#ffaa00', points: 12 },
-  { char: '🚨', color: '#ff00aa', points: 15 },
-  { char: '💣', color: '#ff5500', points: 20 },
-  { char: '⚡', color: '#00ffaa', points: 18 },
-  { char: '🌪️', color: '#aa66ff', points: 22 }
-];
-
-const powerTypes = [
-  { char: '⭐', type: 'invincible', color: '#ffd700', duration: 5000 },
-  { char: '💫', type: 'magnet', color: '#00ffff', duration: 6000 },
-  { char: '🛡️', type: 'shield', color: '#00ff88', duration: 4500 }
-];
-
-function spawnObstacle() {
-  const type = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
-  const isFlying = Math.random() > 0.62;
-  entities.push({
-    id: 'obs_' + Date.now() + Math.random(),
-    char: type.char,
-    color: type.color,
-    x: areaW + 50,
-    y: isFlying ? groundY - 100 - Math.random() * 50 : groundY,
-    width: 40,
-    height: 40,
-    speed: 210 + difficulty * 32 + Math.random() * 45,
-    isObstacle: true,
-    points: type.points,
-    passed: false
-  });
-}
-
-function spawnPowerUp() {
-  const type = powerTypes[Math.floor(Math.random() * powerTypes.length)];
-  entities.push({
-    id: 'pwr_' + Date.now() + Math.random(),
-    char: type.char,
-    color: type.color,
-    x: areaW + 50,
-    y: groundY - 65 - Math.random() * 55,
-    width: 36,
-    height: 36,
-    speed: 175 + difficulty * 18,
-    isPowerUp: true,
-    powerType: type.type,
-    duration: type.duration
-  });
-}
-
-function addParticles(x, y, color, count = 8) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: x + (Math.random() - 0.5) * 20,
-      y: y + (Math.random() - 0.5) * 20,
-      vx: (Math.random() - 0.5) * 7,
-      vy: (Math.random() - 0.5) * 7,
-      life: 1,
-      color,
-      size: 3 + Math.random() * 4
-    });
-  }
-}
-
-/* ========== Rendering ========== */
-function render() {
-  gameArea.querySelectorAll('.emoji, .particle').forEach(el => el.remove());
-
-  if (player) {
-    const el = document.createElement('span');
-    el.className = 'emoji player' + (Date.now() < invincibleUntil ? ' invincible' : '');
-    el.textContent = player.char;
-    el.style.left = player.x + 'px';
-    el.style.top = player.y + 'px';
-    el.style.color = Date.now() < invincibleUntil ? '#0ff' : '#0f0';
-    gameArea.appendChild(el);
-  }
-
-  entities.forEach(e => {
-    const el = document.createElement('span');
-    el.className = 'emoji';
-    el.textContent = e.char;
-    el.style.left = e.x + 'px';
-    el.style.top = e.y + 'px';
-    el.style.color = e.color;
-    gameArea.appendChild(el);
-  });
-
-  particles.forEach(p => {
-    const el = document.createElement('div');
-    el.className = 'particle';
-    el.style.left = p.x + 'px';
-    el.style.top = p.y + 'px';
-    el.style.width = p.size + 'px';
-    el.style.height = p.size + 'px';
-    el.style.background = p.color;
-    el.style.boxShadow = `0 0 ${p.size * 2}px ${p.color}`;
-    gameArea.appendChild(el);
-  });
-}
-
-/* ========== Update ========== */
-function update(dt) {
-  if (gameState !== 'playing' || platformPaused) return;
-
-  // Player movement
-  if (keys.left) player.x -= player.speed * dt;
-  if (keys.right) player.x += player.speed * dt;
-  player.x = Math.max(10, Math.min(areaW - player.width - 10, player.x));
-
-  // Jump physics
-  if (keys.jump && player.grounded) {
-    player.vy = -620;
-    player.jumping = true;
-    player.grounded = false;
-    playTone(520, 'square', 0.08, 0.2);
-  }
-  player.vy += 1600 * dt;
-  player.y += player.vy * dt;
-  if (player.y >= groundY) {
-    player.y = groundY;
-    player.vy = 0;
-    player.jumping = false;
-    player.grounded = true;
-  }
-
-  // Entities
-  for (let i = entities.length - 1; i >= 0; i--) {
-    const e = entities[i];
-    e.x -= e.speed * dt;
-
-    // Magnet attraction
-    if (e.isPowerUp && Date.now() < magnetUntil) {
-      const dx = player.x - e.x;
-      const dy = player.y - e.y;
-      e.x += dx * 3.5 * dt;
-      e.y += dy * 3.5 * dt;
-    }
-
-    // Collision
-    if (rectsOverlap(player, e)) {
-      if (e.isObstacle) {
-        if (Date.now() < invincibleUntil || Date.now() < shieldUntil) {
-          // absorb
-          addParticles(e.x, e.y, e.color, 10);
-          entities.splice(i, 1);
-          combo++;
-          showCombo();
-          score += e.points * Math.max(1, combo);
-          playTone(660, 'sine', 0.1, 0.25);
+        if (yt && yt.game && yt.game.loadData) {
+            yt.game.loadData().then(d => {
+                if (d) { const p = JSON.parse(d); if (p.highScore) highScore = p.highScore; }
+                highScoreDisplay.textContent = 'BEST ' + highScore;
+            }).catch(() => { highScore = +localStorage.getItem('neonRunnerHS') || 0; highScoreDisplay.textContent = 'BEST ' + highScore; });
         } else {
-          addParticles(player.x, player.y, '#ff3355', 14);
-          playTone(180, 'sawtooth', 0.3, 0.3);
-          gameOver();
-          return;
+            highScore = +localStorage.getItem('neonRunnerHS') || 0;
+            highScoreDisplay.textContent = 'BEST ' + highScore;
         }
-      } else if (e.isPowerUp) {
-        applyPower(e.powerType, e.duration);
-        addParticles(e.x, e.y, e.color, 12);
-        entities.splice(i, 1);
-        score += 25;
-        combo++;
-        showCombo();
-        playTone(880, 'triangle', 0.15, 0.28);
-      }
-      continue;
+    } catch (e) {
+        highScore = +localStorage.getItem('neonRunnerHS') || 0;
+        highScoreDisplay.textContent = 'BEST ' + highScore;
+    }
+}
+function saveHS() {
+    try {
+        localStorage.setItem('neonRunnerHS', highScore);
+        if (yt && yt.game && yt.game.saveData) yt.game.saveData(JSON.stringify({highScore})).catch(()=>{});
+    } catch (e) {}
+}
+
+function createPlayer() {
+    return {id:'player',char:'🏃',x:70,y:0,vy:0,w:48,h:48,speed:340,grounded:true};
+}
+const obsTypes = [
+    {char:'🧱',color:'#ff3355',pts:10},{char:'🚧',color:'#ffaa00',pts:12},
+    {char:'🚨',color:'#ff00aa',pts:15},{char:'💣',color:'#ff5500',pts:20},
+    {char:'⚡',color:'#00ffaa',pts:18},{char:'🪨',color:'#cc88ff',pts:14}
+];
+const pwrTypes = [
+    {char:'⭐',type:'inv',color:'#ffd700',dur:5000},
+    {char:'💫',type:'mag',color:'#00ffff',dur:5500},
+    {char:'🛡️',type:'inv',color:'#00ff88',dur:4000},
+    {char:'🚀',type:'speed',color:'#ff66ff',dur:3500}
+];
+
+function spawnObs() {
+    const t = obsTypes[Math.floor(Math.random()*obsTypes.length)];
+    const fly = Math.random() > 0.62;
+    entities.push({
+        id:'o'+Date.now()+Math.random(),char:t.char,color:t.color,
+        x:areaW+50,y:fly?groundY-100-Math.random()*50:groundY,
+        w:40,h:40,speed:210+difficulty*38+Math.random()*45,
+        isObs:true,pts:t.pts,passed:false
+    });
+}
+function spawnPwr() {
+    const t = pwrTypes[Math.floor(Math.random()*pwrTypes.length)];
+    entities.push({
+        id:'p'+Date.now()+Math.random(),char:t.char,color:t.color,
+        x:areaW+40,y:groundY-65-Math.random()*55,w:36,h:36,
+        speed:175+difficulty*22,isPwr:true,ptype:t.type,dur:t.dur
+    });
+}
+
+function render() {
+    gameArea.querySelectorAll('.emoji,.particle').forEach(el=>el.remove());
+    trail.forEach(t=>{
+        const el=document.createElement('div');
+        el.className='particle';
+        el.style.cssText=`left:${t.x}px;top:${t.y}px;width:${t.s}px;height:${t.s}px;background:${t.c};opacity:${t.life};box-shadow:0 0 ${t.s*2}px ${t.c}`;
+        gameArea.appendChild(el);
+    });
+    if (player) {
+        const el=document.createElement('span');
+        el.className='emoji player'+(Date.now()<invUntil?' invincible':'');
+        el.textContent=player.char;
+        el.style.left=player.x+'px';el.style.top=player.y+'px';
+        el.style.color=Date.now()<invUntil?'#0ff':'#0f0';
+        gameArea.appendChild(el);
+    }
+    entities.forEach(e=>{
+        const el=document.createElement('span');
+        el.className='emoji';el.textContent=e.char;
+        el.style.left=e.x+'px';el.style.top=e.y+'px';el.style.color=e.color;
+        gameArea.appendChild(el);
+    });
+    particles.forEach(p=>{
+        const el=document.createElement('div');
+        el.className='particle';
+        el.style.cssText=`left:${p.x}px;top:${p.y}px;width:${p.s}px;height:${p.s}px;background:${p.c};box-shadow:0 0 ${p.s*2}px ${p.c};opacity:${Math.max(0,p.life)}`;
+        gameArea.appendChild(el);
+    });
+    if (Date.now()<shakeUntil) gameArea.classList.add('shake');
+    else gameArea.classList.remove('shake');
+}
+
+function spawnParts(x,y,c,n=8) {
+    for(let i=0;i<n;i++) particles.push({
+        x:x+(Math.random()-.5)*24,y:y+(Math.random()-.5)*24,
+        vx:(Math.random()-.5)*200,vy:(Math.random()-.5)*200-50,
+        s:3+Math.random()*7,c,life:.5+Math.random()*.35
+    });
+}
+
+function update(dt) {
+    if (gameState!=='playing'||platformPaused) return;
+    const now=Date.now();
+
+    if (keys.left) player.x-=player.speed*dt;
+    if (keys.right) player.x+=player.speed*dt;
+    player.x=Math.max(8,Math.min(areaW-player.w-8,player.x));
+
+    if (keys.jump && player.grounded) {
+        player.vy=-530; player.grounded=false;
+        playTone(540,'sine',.11,.24);
+        spawnParts(player.x+20,player.y+38,'#0f0',7);
+    }
+    keys.jump=false;
+
+    player.vy+=1650*dt;
+    player.y+=player.vy*dt;
+    if (player.y>=groundY){player.y=groundY;player.vy=0;player.grounded=true;}
+
+    if (Math.random()>.4) {
+        trail.push({x:player.x+18,y:player.y+30,s:4+Math.random()*5,c:Date.now()<invUntil?'#0ff':'#0f8',life:.45});
+    }
+    for(let i=trail.length-1;i>=0;i--){trail[i].life-=dt*1.8;trail[i].y+=20*dt;if(trail[i].life<=0)trail.splice(i,1);}
+
+    for(let i=entities.length-1;i>=0;i--){
+        const e=entities[i];
+        e.x-=e.speed*dt;
+        if(e.isPwr&&now<magUntil){
+            const dx=player.x-e.x,dy=player.y-e.y,d=Math.hypot(dx,dy);
+            if(d<230){e.x+=dx*4.2*dt;e.y+=dy*4.2*dt;}
+        }
+        if(e.isObs&&!e.passed&&e.x+e.w<player.x){
+            e.passed=true;combo++;score+=e.pts+combo*2;lastPassed=now;updateUI();
+            if(combo>=2){comboDisplay.textContent='COMBO x'+combo;comboDisplay.style.opacity='1';}
+            playTone(680+combo*35,'triangle',.07,.14);
+        }
+        if(e.x<-60){
+            entities.splice(i,1);
+            if(e.isObs&&!e.passed){combo=0;comboDisplay.style.opacity='0';}
+        }
     }
 
-    // Passed obstacle for points
-    if (e.isObstacle && !e.passed && e.x + e.width < player.x) {
-      e.passed = true;
-      score += e.points;
-      combo++;
-      showCombo();
-      updateScoreUI();
+    for(let i=particles.length-1;i>=0;i--){
+        const p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;
+        if(p.life<=0)particles.splice(i,1);
     }
 
-    if (e.x < -60) entities.splice(i, 1);
-  }
-
-  // Particles update
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.life -= dt * 2.2;
-    if (p.life <= 0) particles.splice(i, 1);
-  }
-
-  // Spawn
-  spawnTimer -= dt;
-  if (spawnTimer <= 0) {
-    spawnObstacle();
-    spawnTimer = Math.max(0.55, 1.35 - difficulty * 0.08);
-  }
-  powerSpawnTimer -= dt;
-  if (powerSpawnTimer <= 0) {
-    if (Math.random() > 0.35) spawnPowerUp();
-    powerSpawnTimer = 3.8 + Math.random() * 2.5;
-  }
-
-  // Difficulty ramp
-  difficulty = 1 + Math.floor(score / 80) * 0.35;
-
-  // Power timers UI
-  updatePowerUI();
-}
-
-function rectsOverlap(a, b) {
-  return a.x < b.x + b.width && a.x + a.width > b.x &&
-         a.y < b.y + b.height && a.y + a.height > b.y;
-}
-
-function applyPower(type, duration) {
-  const now = Date.now();
-  if (type === 'invincible') invincibleUntil = now + duration;
-  if (type === 'magnet') magnetUntil = now + duration;
-  if (type === 'shield') shieldUntil = now + duration;
-}
-
-function showCombo() {
-  if (combo < 2) return;
-  comboDisplay.textContent = `COMBO x${combo}`;
-  comboDisplay.style.opacity = '1';
-  clearTimeout(comboDisplay._t);
-  comboDisplay._t = setTimeout(() => { comboDisplay.style.opacity = '0'; }, 900);
-}
-
-function updateScoreUI() {
-  scoreDisplay.textContent = `SCORE ${Math.floor(score)}`;
-  if (score > highScore) {
-    highScore = Math.floor(score);
-    highScoreDisplay.textContent = `BEST ${highScore}`;
-  }
-}
-
-function updatePowerUI() {
-  const now = Date.now();
-  let txt = '';
-  if (now < invincibleUntil) txt += `⭐ ${Math.ceil((invincibleUntil - now) / 1000)}s `;
-  if (now < magnetUntil) txt += `💫 ${Math.ceil((magnetUntil - now) / 1000)}s `;
-  if (now < shieldUntil) txt += `🛡️ ${Math.ceil((shieldUntil - now) / 1000)}s`;
-  powerUpTimer.textContent = txt;
-  powerUpTimer.style.opacity = txt ? '1' : '0';
-}
-
-/* ========== Loop ========== */
-function loop(ts) {
-  if (!lastTime) lastTime = ts;
-  const dt = Math.min(0.033, (ts - lastTime) / 1000);
-  lastTime = ts;
-  update(dt);
-  render();
-  rafId = requestAnimationFrame(loop);
-}
-
-/* ========== Controls ========== */
-function bindControls() {
-  window.addEventListener('keydown', e => {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
-    if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
-      keys.jump = true;
-      e.preventDefault();
+    const px=player.x+8,py=player.y+8,pw=player.w-16,ph=player.h-16;
+    for(let i=entities.length-1;i>=0;i--){
+        const e=entities[i],ex=e.x+5,ey=e.y+5,ew=e.w-10,eh=e.h-10;
+        if(px<ex+ew&&px+pw>ex&&py<ey+eh&&py+ph>ey){
+            if(e.isPwr){
+                spawnParts(e.x,e.y,e.color,14);playTone(920,'triangle',.22,.32);
+                if(e.ptype==='inv')invUntil=now+e.dur;
+                else if(e.ptype==='mag')magUntil=now+e.dur;
+                else if(e.ptype==='speed')player.speed=480;
+                setTimeout(()=>{if(e.ptype==='speed')player.speed=340;},e.dur);
+                score+=55;updateUI();entities.splice(i,1);
+            }else if(e.isObs){
+                if(now<invUntil){
+                    spawnParts(e.x,e.y,e.color,11);playTone(380,'square',.09,.18);
+                    score+=e.pts*2;updateUI();entities.splice(i,1);
+                }else{
+                    spawnParts(player.x,player.y,'#ff0055',18);
+                    playTone(110,'sawtooth',.38,.42);
+                    shakeUntil=now+400;
+                    gameOver();return;
+                }
+            }
+        }
     }
-    if (e.code === 'Escape' && gameState === 'playing') pauseGame();
-    if (e.code === 'Escape' && gameState === 'paused' && !platformPaused) resumeGame();
-  });
-  window.addEventListener('keyup', e => {
-    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
-    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
-    if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') keys.jump = false;
-  });
 
-  const leftBtn = document.getElementById('leftBtn');
-  const rightBtn = document.getElementById('rightBtn');
-  const jumpBtn = document.getElementById('jumpBtn');
+    spawnT-=dt;
+    if(spawnT<=0){spawnObs();spawnT=Math.max(.65,1.55-difficulty*.13)+Math.random()*.35;}
+    powerT-=dt;
+    if(powerT<=0){if(Math.random()>.3)spawnPwr();powerT=6.5+Math.random()*5;}
+    difficulty=1+score/750;
 
-  const setKey = (key, val) => { keys[key] = val; };
-  leftBtn.addEventListener('touchstart', e => { e.preventDefault(); setKey('left', true); leftBtn.classList.add('active'); }, { passive: false });
-  leftBtn.addEventListener('touchend', () => { setKey('left', false); leftBtn.classList.remove('active'); });
-  rightBtn.addEventListener('touchstart', e => { e.preventDefault(); setKey('right', true); rightBtn.classList.add('active'); }, { passive: false });
-  rightBtn.addEventListener('touchend', () => { setKey('right', false); rightBtn.classList.remove('active'); });
-  jumpBtn.addEventListener('touchstart', e => { e.preventDefault(); setKey('jump', true); jumpBtn.classList.add('active'); }, { passive: false });
-  jumpBtn.addEventListener('touchend', () => { setKey('jump', false); jumpBtn.classList.remove('active'); });
+    if(now<invUntil){powerUpTimer.textContent='🛡 '+((invUntil-now)/1000).toFixed(1)+'s';powerUpTimer.style.opacity='1';powerUpTimer.style.color='#0ff';}
+    else if(now<magUntil){powerUpTimer.textContent='💫 '+((magUntil-now)/1000).toFixed(1)+'s';powerUpTimer.style.opacity='1';powerUpTimer.style.color='#0ff';}
+    else powerUpTimer.style.opacity='0';
 
-  // mouse support for buttons
-  leftBtn.addEventListener('mousedown', () => setKey('left', true));
-  leftBtn.addEventListener('mouseup', () => setKey('left', false));
-  rightBtn.addEventListener('mousedown', () => setKey('right', true));
-  rightBtn.addEventListener('mouseup', () => setKey('right', false));
-  jumpBtn.addEventListener('mousedown', () => setKey('jump', true));
-  jumpBtn.addEventListener('mouseup', () => setKey('jump', false));
-
-  document.getElementById('startBtn').addEventListener('click', startGame);
-  document.getElementById('resumeBtn').addEventListener('click', () => resumeGame());
-  document.getElementById('restartBtn').addEventListener('click', startGame);
+    if(now-lastPassed>2400){combo=0;comboDisplay.style.opacity='0';}
+    render();
 }
 
-/* ========== Game flow ========== */
-function resize() {
-  areaW = gameArea.clientWidth;
-  areaH = gameArea.clientHeight;
-  groundY = areaH * 0.72;
-  if (player) player.y = Math.min(player.y, groundY);
+function updateUI(){
+    scoreDisplay.textContent='SCORE '+score;
+    if(score>highScore){highScore=score;highScoreDisplay.textContent='BEST '+highScore;}
 }
 
-function startGame() {
-  score = 0;
-  combo = 0;
-  difficulty = 1;
-  entities = [];
-  particles = [];
-  invincibleUntil = 0;
-  magnetUntil = 0;
-  shieldUntil = 0;
-  player = createPlayer();
-  player.y = groundY;
+function loop(ts){
+    if(!lastTime)lastTime=ts;
+    const dt=Math.min((ts-lastTime)/1000,.05);lastTime=ts;
+    update(dt);rafId=requestAnimationFrame(loop);
+}
 
-  startOverlay.style.display = 'none';
-  pauseOverlay.style.display = 'none';
-  gameOverOverlay.style.display = 'none';
-  comboDisplay.style.opacity = '0';
-  powerUpTimer.style.opacity = '0';
+function resize(){
+    areaW=gameArea.clientWidth;areaH=gameArea.clientHeight;
+    groundY=Math.floor(areaH*.72);
+    if(player){player.y=Math.min(player.y,groundY);if(player.grounded)player.y=groundY;}
+}
 
-  updateScoreUI();
-  gameState = 'playing';
-  lastTime = 0;
-
-  if (scoreInterval) clearInterval(scoreInterval);
-  scoreInterval = setInterval(() => {
-    if (gameState === 'playing' && !platformPaused) {
-      score += 1;
-      updateScoreUI();
+function bind(){
+    window.addEventListener('keydown',e=>{
+        if(e.repeat)return;
+        if(e.code==='ArrowLeft'||e.code==='KeyA')keys.left=true;
+        if(e.code==='ArrowRight'||e.code==='KeyD')keys.right=true;
+        if(e.code==='ArrowUp'||e.code==='Space'||e.code==='KeyW'){e.preventDefault();keys.jump=true;}
+        if(e.code==='Escape'||e.code==='KeyP'){
+            if(gameState==='playing')pauseGame();
+            else if(gameState==='paused')resumeGame();
+        }
+    });
+    window.addEventListener('keyup',e=>{
+        if(e.code==='ArrowLeft'||e.code==='KeyA')keys.left=false;
+        if(e.code==='ArrowRight'||e.code==='KeyD')keys.right=false;
+    });
+    function touch(btn,on,off){
+        btn.addEventListener('touchstart',e=>{e.preventDefault();on();btn.classList.add('active');},{passive:false});
+        btn.addEventListener('touchend',e=>{e.preventDefault();off();btn.classList.remove('active');});
+        btn.addEventListener('touchcancel',()=>{off();btn.classList.remove('active');});
+        btn.addEventListener('mousedown',e=>{e.preventDefault();on();btn.classList.add('active');});
+        btn.addEventListener('mouseup',()=>{off();btn.classList.remove('active');});
+        btn.addEventListener('mouseleave',()=>{off();btn.classList.remove('active');});
     }
-  }, 1000);
-
-  if (!rafId) rafId = requestAnimationFrame(loop);
-  playTone(440, 'sine', 0.18, 0.28);
+    touch(document.getElementById('leftBtn'),()=>keys.left=true,()=>keys.left=false);
+    touch(document.getElementById('rightBtn'),()=>keys.right=true,()=>keys.right=false);
+    touch(document.getElementById('jumpBtn'),()=>keys.jump=true,()=>{});
+    document.getElementById('startBtn').addEventListener('click',startGame);
+    document.getElementById('resumeBtn').addEventListener('click',()=>resumeGame());
+    document.getElementById('restartBtn').addEventListener('click',startGame);
 }
 
-function pauseGame(fromPlatform = false) {
-  if (gameState !== 'playing') return;
-  gameState = 'paused';
-  if (!fromPlatform) pauseOverlay.style.display = 'flex';
+function startGame(){
+    score=0;combo=0;difficulty=1;entities=[];particles=[];trail=[];
+    invUntil=0;magUntil=0;spawnT=1.1;powerT=5.5;lastPassed=0;
+    resize();player=createPlayer();player.y=groundY;
+    startOverlay.style.display='none';pauseOverlay.style.display='none';gameOverOverlay.style.display='none';
+    comboDisplay.style.opacity='0';powerUpTimer.style.opacity='0';
+    updateUI();gameState='playing';lastTime=0;
+    if(scoreInt)clearInterval(scoreInt);
+    scoreInt=setInterval(()=>{if(gameState==='playing'&&!platformPaused){score+=1;updateUI();}},1000);
+    if(!rafId)rafId=requestAnimationFrame(loop);
+    playTone(440,'sine',.18,.28);
 }
 
-function resumeGame(fromPlatform = false) {
-  if (gameState !== 'paused') return;
-  if (platformPaused && !fromPlatform) return;
-  gameState = 'playing';
-  pauseOverlay.style.display = 'none';
-  lastTime = 0;
+function pauseGame(fromPlat=false){
+    if(gameState!=='playing')return;
+    gameState='paused';
+    if(!fromPlat)pauseOverlay.style.display='flex';
+}
+function resumeGame(fromPlat=false){
+    if(gameState!=='paused')return;
+    if(platformPaused&&!fromPlat)return;
+    gameState='playing';pauseOverlay.style.display='none';lastTime=0;
+}
+function gameOver(){
+    gameState='over';
+    if(scoreInt)clearInterval(scoreInt);
+    finalScoreEl.textContent=score;
+    if(score>=highScore&&score>0){newBestText.style.display='block';saveHS();}
+    else newBestText.style.display='none';
+    if(yt&&yt.game&&yt.game.sendScore){try{yt.game.sendScore({value:score});}catch(e){}}
+    gameOverOverlay.style.display='flex';
 }
 
-function gameOver() {
-  gameState = 'over';
-  if (scoreInterval) clearInterval(scoreInterval);
-
-  finalScoreEl.textContent = Math.floor(score);
-  if (score >= highScore && score > 0) {
-    newBestText.style.display = 'block';
-    highScore = Math.floor(score);
-    highScoreDisplay.textContent = `BEST ${highScore}`;
-    saveHighScore();
-    sendBestScore(highScore);
-  } else {
-    newBestText.style.display = 'none';
-    // still send current run score for leaderboard context if desired
-    sendBestScore(Math.max(highScore, score));
-  }
-  gameOverOverlay.style.display = 'flex';
+function init(){
+    resize();
+    window.addEventListener('resize',()=>{resize();});
+    bind();loadHS();
+    requestAnimationFrame(()=>{
+        if(yt&&yt.game){try{yt.game.firstFrameReady();}catch(e){}}
+        if(yt&&yt.game){try{yt.game.gameReady();}catch(e){}}
+    });
+    rafId=requestAnimationFrame(loop);
 }
-
-/* ========== Init (SDK lifecycle) ========== */
-function init() {
-  resize();
-  window.addEventListener('resize', () => {
-    resize(); // maintain state on resize (Playables requirement)
-  });
-  bindControls();
-
-  // 1) firstFrameReady as soon as something is visible
-  if (yt && yt.game && yt.game.firstFrameReady) {
-    try { yt.game.firstFrameReady(); } catch (e) {}
-  }
-
-  // 2) Load cloud data, then mark ready
-  loadHighScore().then(() => {
-    // 3) gameReady only when interactive (start screen is ready)
-    if (yt && yt.game && yt.game.gameReady) {
-      try { yt.game.gameReady(); } catch (e) {}
-    }
-  });
-
-  rafId = requestAnimationFrame(loop);
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+else init();
 </script>
 </body>
 </html>
