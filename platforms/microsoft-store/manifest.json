@@ -1,0 +1,10 @@
+{
+  "name": "Neon Emoji Runner",
+  "short_name": "NeonRunner",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#050010",
+  "theme_color": "#00ffcc",
+  "description": "High-octane cyberpunk neon arcade runner."
+}

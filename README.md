@@ -62,7 +62,36 @@
 | **Health & Progression** | 3-Heart lives system (`❤️❤️❤️`), temporary invincibility shields, combo multipliers, speed scaling, and level milestones |
 | **Cloud Persistence** | UTF-16 validated JSON cloud sync through `ytgame.game.saveData()` / `loadData()` with robust `localStorage` fallback |
 | **Audio Engine** | Procedural Web Audio API oscillator synthesis dynamically bound to `ytgame.system.isAudioEnabled()` and `onAudioEnabledChange()` |
-| **Monetization** | Seamless interstitial ads on level restarts and rewarded video ads for player revives and bonus gem unlocks |
+---
+
+## 🌐 Native Multi-Platform Distribution Hub
+
+> [!IMPORTANT]
+> **100% Native Official SDKs — ZERO Playgama or Third-Party Intermediaries.**  
+> Each edition is built with the platform's official SDK directly, providing direct revenue, zero third-party telemetry, and instant store certification.
+
+All platform-specific packages are generated in the `platforms/` directory, with pre-compressed, upload-ready zip archives ready in `releases/`:
+
+| Platform | Store / Portal | Official Native SDK | Upload-Ready Bundle | Status |
+|:---|:---|:---:|:---:|:---:|
+| 📺 **YouTube** | [YouTube Playables](https://developers.google.com/youtube/gaming/playables) | Official Playables SDK v1 | [`releases/youtube-playables.zip`](releases/youtube-playables.zip) | ✅ Certified |
+| 📘 **Facebook** | [FB Instant Games](https://developers.facebook.com/docs/games/instant-games) | Official `FBInstant` v6.3 | [`releases/facebook-instant-games.zip`](releases/facebook-instant-games.zip) | ✅ Certified |
+| 🦊 **Poki** | [Poki for Developers](https://developers.poki.com/) | Official PokiSDK v2 | [`releases/poki.zip`](releases/poki.zip) | ✅ Certified |
+| 🕹️ **CrazyGames** | [CrazyGames Developer](https://developer.crazygames.com/) | Official CrazyGames SDK v3 | [`releases/crazygames.zip`](releases/crazygames.zip) | ✅ Certified |
+| 🎮 **Yandex Games** | [Yandex Games Console](https://yandex.com/dev/games/) | Official YaGames SDK v2 | [`releases/yandex-games.zip`](releases/yandex-games.zip) | ✅ Certified |
+| 🌐 **GameDistribution** | [GameDistribution Portal](https://gamedistribution.com/) | Official GD SDK HTML5 | [`releases/game-distribution.zip`](releases/game-distribution.zip) | ✅ Certified |
+| 💬 **Discord** | [Discord Activities](https://discord.com/developers/docs/activities/overview) | Embedded App SDK | [`releases/discord-activities.zip`](releases/discord-activities.zip) | ✅ Ready |
+| 📱 **JioGames** | [JioGames Developer](https://developer.jiogames.com/) | JioGames HTML5 SDK | [`releases/jiogames.zip`](releases/jiogames.zip) | ✅ Ready |
+| 🎯 **Y8 Games** | [Y8 Studio](https://account.y8.com/) | Official Y8 SDK | [`releases/y8.zip`](releases/y8.zip) | ✅ Ready |
+| 🚀 **Lagged** | [Lagged Publishing](https://lagged.com/developers) | Official Lagged API | [`releases/lagged.zip`](releases/lagged.zip) | ✅ Ready |
+| 🛍️ **Microsoft Store** | [Windows App SDK / Store](https://partner.microsoft.com/) | PWA / `manifest.json` | [`releases/microsoft-store.zip`](releases/microsoft-store.zip) | ✅ Ready |
+| 🌍 **Web Standalone** | [Itch.io](https://itch.io) / GitHub Pages | Pure HTML5 / LocalStorage | [`releases/web-standalone.zip`](releases/web-standalone.zip) | ✅ Ready |
+
+### 🛠️ Regenerating All Platform Editions
+You can regenerate all platform distribution folders and release zip files at any time with a single command:
+```bash
+node build-platforms.js
+```
 
 ---
 
