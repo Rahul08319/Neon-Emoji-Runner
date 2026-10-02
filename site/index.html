@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Neon Emoji Runner | Official Apple Showcase</title>
+  <title>Neon Emoji Runner | Apple Fluid Edition Showcase</title>
   <style>
+    /* ==========================================================================
+       APPLE DESIGN SYSTEM - 2026 FLUID & LIQUID GLASS SPECIFICATION
+       ========================================================================== */
     :root {
       --sf-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
       --system-cyan: #00ffcc;
@@ -35,53 +38,91 @@
       overflow-x: hidden;
       background: #000000;
       line-height: 1.5;
+      min-height: 100vh;
     }
 
-    /* Ambient Background Glow */
-    .ambient-radial {
+    /* Ambient Floating Glow Orbs (Apple Breathing Motion) */
+    .ambient-radial-1 {
       position: fixed;
-      top: -20%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1000px;
+      top: -10%;
+      left: 15%;
+      width: 700px;
       height: 700px;
-      background: radial-gradient(circle, rgba(0, 255, 204, 0.12) 0%, rgba(255, 0, 127, 0.08) 45%, transparent 70%);
-      filter: blur(80px);
+      background: radial-gradient(circle, rgba(0, 255, 204, 0.12) 0%, rgba(157, 0, 255, 0.05) 50%, transparent 70%);
+      filter: blur(90px);
       pointer-events: none;
       z-index: 0;
+      animation: ambientFloat1 18s ease-in-out infinite alternate;
     }
 
-    /* Apple Frosted Navbar */
+    .ambient-radial-2 {
+      position: fixed;
+      bottom: -15%;
+      right: 10%;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(255, 0, 127, 0.1) 0%, rgba(0, 255, 204, 0.04) 50%, transparent 70%);
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+      animation: ambientFloat2 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientFloat1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(60px, 40px) scale(1.15); }
+    }
+
+    @keyframes ambientFloat2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-80px, -50px) scale(1.1); }
+    }
+
+    /* ==========================================================================
+       APPLE TRANSLUCENT FROSTED NAVIGATION
+       ========================================================================== */
     nav {
       position: sticky;
       top: 0;
       width: 100%;
-      height: 52px;
-      background: rgba(10, 10, 15, 0.75);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      height: 54px;
+      background: rgba(10, 10, 15, 0.72);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 clamp(20px, 6vw, 80px);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
     }
 
     .nav-brand {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-weight: 700;
+      gap: 10px;
+      font-weight: 800;
       font-size: 15px;
       color: #ffffff;
       text-decoration: none;
-      letter-spacing: -0.2px;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-brand-pill {
+      font-size: 10px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00ffcc, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border: 1px solid rgba(0, 255, 204, 0.35);
+      padding: 2px 8px;
+      border-radius: 9999px;
     }
 
     .nav-links {
       display: flex;
-      gap: 24px;
+      gap: 26px;
       list-style: none;
       font-size: 13px;
       font-weight: 500;
@@ -90,18 +131,19 @@
     .nav-links a {
       color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.2s, transform 0.2s;
     }
 
     .nav-links a:hover {
       color: #00ffcc;
+      transform: translateY(-1px);
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 720px) {
       .nav-links { display: none; }
     }
 
-    /* Apple Pill Button */
+    /* Apple Spring Pill Button */
     .apple-pill-btn {
       background: #ffffff;
       color: #000000;
@@ -113,32 +155,39 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(0, 255, 204, 0.4);
       transition: transform 0.2s var(--apple-ease), box-shadow 0.2s;
     }
 
     .apple-pill-btn:hover {
-      transform: scale(1.04);
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+      transform: scale(1.05) translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 255, 204, 0.6);
     }
 
     .apple-pill-btn:active {
       transform: scale(0.96);
+      transition: transform 0.08s ease-out;
     }
 
     .apple-btn-outline {
       background: rgba(255, 255, 255, 0.08);
       color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
     .apple-btn-outline:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(0, 255, 204, 0.4);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(0, 255, 204, 0.5);
       color: #00ffcc;
     }
 
-    /* Hero Section */
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
     .hero {
       position: relative;
       z-index: 10;
@@ -146,8 +195,8 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 80px 20px 40px 20px;
-      max-width: 960px;
+      padding: 70px 20px 30px 20px;
+      max-width: 980px;
       margin: 0 auto;
     }
 
@@ -155,86 +204,149 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 16px;
+      padding: 6px 18px;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.5);
       font-size: 12px;
       font-weight: 600;
       color: #00ffcc;
       margin-bottom: 24px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s var(--apple-spring);
+    }
+
+    .badge-pill:hover {
+      transform: scale(1.04);
+      border-color: #00ffcc;
     }
 
     .hero-h1 {
-      font-size: clamp(2.8rem, 9vw, 5.2rem);
+      font-size: clamp(3rem, 9.5vw, 5.8rem);
       font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 1.05;
-      margin-bottom: 18px;
-      background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 75%, #00ffcc 100%);
+      letter-spacing: -2.5px;
+      line-height: 1.02;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.7) 75%, #00ffcc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-sub {
-      font-size: clamp(1.05rem, 3.2vw, 1.4rem);
-      color: rgba(255, 255, 255, 0.65);
-      max-width: 680px;
-      margin-bottom: 34px;
+      font-size: clamp(1.1rem, 3.2vw, 1.45rem);
+      color: rgba(255, 255, 255, 0.68);
+      max-width: 720px;
+      margin-bottom: 36px;
       font-weight: 400;
       letter-spacing: -0.3px;
     }
 
     .hero-actions {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 48px;
+      margin-bottom: 40px;
     }
 
-    /* Device Mockup */
-    .device-stage {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto 80px auto;
-      padding: 0 20px;
+    /* Device Preview Controls */
+    .device-switcher {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      padding: 5px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      margin-bottom: 20px;
+      gap: 4px;
       z-index: 10;
     }
 
+    .device-tab {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .device-tab.active {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .device-tab:hover {
+      color: #00ffcc;
+    }
+
+    /* Apple Device Bezel */
+    .device-stage {
+      position: relative;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto 90px auto;
+      padding: 0 20px;
+      z-index: 10;
+      transition: max-width 0.4s var(--apple-spring);
+    }
+
+    .device-stage.device-iphone {
+      max-width: 380px;
+    }
+
+    .device-stage.device-ipad {
+      max-width: 720px;
+    }
+
     .device-bezel {
-      background: #111116;
-      border: 3px solid rgba(255, 255, 255, 0.18);
+      background: #0d0d12;
+      border: 3.5px solid rgba(255, 255, 255, 0.18);
       box-shadow: 
-        0 30px 100px rgba(0, 255, 204, 0.25),
-        0 10px 40px rgba(0, 0, 0, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 35px 120px rgba(0, 255, 204, 0.22),
+        0 15px 50px rgba(0, 0, 0, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
       border-radius: 36px;
       overflow: hidden;
       aspect-ratio: 16 / 9;
       position: relative;
+      transition: aspect-ratio 0.4s var(--apple-spring);
+    }
+
+    .device-stage.device-iphone .device-bezel {
+      aspect-ratio: 9 / 16;
+      border-radius: 44px;
+    }
+
+    .device-stage.device-ipad .device-bezel {
+      aspect-ratio: 4 / 3;
+      border-radius: 32px;
     }
 
     .device-bezel iframe {
       width: 100%;
       height: 100%;
       border: none;
+      display: block;
     }
 
     /* Section Styling */
     section {
       position: relative;
       z-index: 10;
-      max-width: 1100px;
-      margin: 0 auto 100px auto;
+      max-width: 1140px;
+      margin: 0 auto 120px auto;
       padding: 0 24px;
     }
 
     .section-header {
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 50px;
     }
 
     .section-eyebrow {
@@ -242,116 +354,206 @@
       font-weight: 700;
       color: #00ffcc;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 8px;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
     }
 
     .section-title {
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-size: clamp(2.2rem, 6.5vw, 3.6rem);
       font-weight: 800;
-      letter-spacing: -1px;
+      letter-spacing: -1.2px;
+      line-height: 1.1;
     }
 
-    /* Apple Bento Grid */
+    /* ==========================================================================
+       APPLE BENTO GRID WITH INTERACTIVE POINTER SPOTLIGHT
+       ========================================================================== */
     .bento-showcase {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 22px;
     }
 
-    @media (max-width: 840px) {
+    @media (max-width: 860px) {
       .bento-showcase {
         grid-template-columns: 1fr;
       }
     }
 
     .bento-box {
-      background: rgba(18, 12, 30, 0.6);
-      backdrop-filter: blur(28px) saturate(190%);
-      -webkit-backdrop-filter: blur(28px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+      background: rgba(18, 12, 30, 0.65);
+      backdrop-filter: blur(32px) saturate(210%);
+      -webkit-backdrop-filter: blur(32px) saturate(210%);
+      border: 1px solid rgba(255, 255, 255, 0.13);
       border-radius: 28px;
-      padding: 34px 28px;
+      padding: 36px 30px;
       box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.22),
-        0 20px 48px rgba(0, 0, 0, 0.5);
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 24px 60px rgba(0, 0, 0, 0.55);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.3s var(--apple-spring), border-color 0.2s, box-shadow 0.3s;
+      overflow: hidden;
+      transition: transform 0.3s var(--apple-spring), border-color 0.25s, box-shadow 0.3s;
+    }
+
+    .bento-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 204, 0.14), transparent 45%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .bento-box:hover::before {
+      opacity: 1;
     }
 
     .bento-box:hover {
-      transform: translateY(-4px) scale(1.01);
-      border-color: rgba(0, 255, 204, 0.4);
+      transform: translateY(-5px) scale(1.015);
+      border-color: rgba(0, 255, 204, 0.45);
       box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 24px 60px rgba(0, 255, 204, 0.2);
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 30px 80px rgba(0, 255, 204, 0.2);
     }
 
     .bento-span-2 {
       grid-column: span 2;
     }
 
-    @media (max-width: 840px) {
+    @media (max-width: 860px) {
       .bento-span-2 {
         grid-column: span 1;
       }
     }
 
     .bento-card-title {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
+      letter-spacing: -0.6px;
+      margin-bottom: 10px;
       color: #ffffff;
     }
 
     .bento-card-desc {
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.68);
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .bento-icon-lg {
-      font-size: 42px;
-      margin-bottom: 16px;
+      font-size: 46px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 6px 18px rgba(0, 255, 204, 0.4));
+      transition: transform 0.3s var(--apple-spring);
     }
 
-    /* Platform Grid */
+    .bento-box:hover .bento-icon-lg {
+      transform: scale(1.15) rotate(4deg);
+    }
+
+    /* Soundboard Interactive Section */
+    .soundboard-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .sound-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+
+    .sound-btn:hover {
+      background: rgba(0, 255, 204, 0.2);
+      border-color: #00ffcc;
+      transform: scale(1.05);
+    }
+
+    .sound-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* Platform Filter Controls */
+    .platform-filters {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 7px 18px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: rgba(0, 255, 204, 0.25);
+      border-color: #00ffcc;
+      color: #ffffff;
+      transform: scale(1.04);
+    }
+
+    /* Platform Hub Grid */
     .platform-hub-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 18px;
     }
 
     .platform-card {
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 20px;
+      border-radius: 22px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s var(--apple-spring), border-color 0.2s;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 10px 28px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s var(--apple-spring), border-color 0.2s, box-shadow 0.25s;
     }
 
     .platform-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px) scale(1.02);
       border-color: #00ffcc;
+      box-shadow: 0 16px 40px rgba(0, 255, 204, 0.25);
     }
 
     .platform-card-header {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 12px;
     }
 
     .platform-icon {
-      font-size: 28px;
+      font-size: 32px;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
     }
 
     .platform-name {
@@ -363,51 +565,56 @@
     .platform-sdk {
       font-size: 11px;
       color: #00ffcc;
+      font-weight: 500;
     }
 
     .platform-download-btn {
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
-      padding: 8px 14px;
+      padding: 9px 16px;
       border-radius: 9999px;
       text-align: center;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
-      display: inline-block;
-      transition: background 0.2s, color 0.2s;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      margin-top: 14px;
+      display: block;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      margin-top: 16px;
     }
 
     .platform-download-btn:hover {
       background: #00ffcc;
       color: #000000;
       border-color: #00ffcc;
+      transform: scale(1.02);
     }
 
     /* Footer */
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 40px 20px;
+      padding: 50px 24px;
       text-align: center;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.45);
     }
   </style>
 </head>
 <body>
 
-<div class="ambient-radial"></div>
+<div class="ambient-radial-1"></div>
+<div class="ambient-radial-2"></div>
 
 <!-- NAVIGATION -->
 <nav>
   <a href="#" class="nav-brand">
     <span>⚡</span> NEON EMOJI RUNNER
+    <span class="nav-brand-pill">APPLE FLUID</span>
   </a>
   <ul class="nav-links">
     <li><a href="#demo">Live Demo</a></li>
-    <li><a href="#features">Features</a></li>
+    <li><a href="#features">Architecture</a></li>
+    <li><a href="#soundboard">Web Audio</a></li>
     <li><a href="#platforms">Platform Hub</a></li>
     <li><a href="https://github.com/Rahul08319/Neon-Emoji-Runner" target="_blank">GitHub</a></li>
   </ul>
@@ -419,33 +626,41 @@
 <!-- HERO SECTION -->
 <div class="hero">
   <div class="badge-pill">
-    <span>🍎</span> APPLE FLUID DESIGN • ZERO DEPENDENCIES
+    <span>🍎</span> APPLE FLUID DESIGN • 12 NATIVE EDITIONS
   </div>
   <h1 class="hero-h1">Pure Glow.<br>Infinite Velocity.</h1>
   <p class="hero-sub">
-    High-octane neon arcade runner designed with Apple Human Interface standards, Liquid Glass materials, Dynamic Island HUD, and official native SDKs for all 12 major gaming platforms.
+    An ultra-responsive neon arcade runner engineered with Apple Human Interface standards, Liquid Glass materials, interactive Dynamic Island HUD, and native platform SDKs for all 12 major gaming portals.
   </p>
+
   <div class="hero-actions">
-    <a href="../index.html" class="apple-pill-btn" style="padding: 12px 28px; font-size: 15px;">
-      ▶ Launch Fullscreen Game
+    <a href="../index.html" class="apple-pill-btn" style="padding: 13px 30px; font-size: 15px;">
+      ▶ Play Fullscreen Game
     </a>
-    <a href="#platforms" class="apple-pill-btn apple-btn-outline" style="padding: 12px 28px; font-size: 15px;">
+    <a href="#platforms" class="apple-pill-btn apple-btn-outline" style="padding: 13px 30px; font-size: 15px;">
       📦 Download Platform Zips
     </a>
+  </div>
+
+  <!-- Interactive Device Switcher -->
+  <div class="device-switcher">
+    <button class="device-tab active" data-device="mac">🖥️ Studio Display (16:9)</button>
+    <button class="device-tab" data-device="ipad">📱 iPad Pro (4:3)</button>
+    <button class="device-tab" data-device="iphone">📱 iPhone 16 Pro (9:16)</button>
   </div>
 </div>
 
 <!-- LIVE PLAYABLE DEMO STAGE -->
 <div class="device-stage" id="demo">
   <div class="device-bezel">
-    <iframe src="../index.html" title="Neon Emoji Runner Live Demo"></iframe>
+    <iframe id="gameFrame" src="../index.html" title="Neon Emoji Runner Live Demo"></iframe>
   </div>
 </div>
 
 <!-- APPLE BENTO SHOWCASE -->
 <section id="features">
   <div class="section-header">
-    <div class="section-eyebrow">Architecture & Aesthetics</div>
+    <div class="section-eyebrow">Design System & Architecture</div>
     <h2 class="section-title">Engineered to Apple Standards.</h2>
   </div>
 
@@ -456,7 +671,7 @@
       <div>
         <h3 class="bento-card-title">Apple Liquid Glass Materials</h3>
         <p class="bento-card-desc">
-          Translucent frosted panels with 32px backdrop blur, 210% saturation boost, specular inner edge highlights, and G2 continuous curvature squircles.
+          Translucent frosted panels crafted with 32px backdrop blur, 210% saturation boost, dual specular top-edge highlights, and G2 continuous curvature squircles that respond to ambient lighting.
         </p>
       </div>
     </div>
@@ -467,7 +682,7 @@
       <div>
         <h3 class="bento-card-title">Dynamic Island HUD</h3>
         <p class="bento-card-desc">
-          Interactive morphing pill that springs dynamically during combo streaks, level-ups, and life checks.
+          Floating morphing pill that springs dynamically during combo streaks, level-ups, and life events with real-time particle feedback.
         </p>
       </div>
     </div>
@@ -478,19 +693,25 @@
       <div>
         <h3 class="bento-card-title">60 FPS Kinetic Physics</h3>
         <p class="bento-card-desc">
-          Zero-latency omnidirectional vector physics with momentum damping and responsive keyboard + touch D-Pad controls.
+          Zero-latency omnidirectional vector physics with momentum damping, speed warp lines, shockwaves, and responsive keyboard + touch controls.
         </p>
       </div>
     </div>
 
     <!-- Bento 4 -->
-    <div class="bento-box">
+    <div class="bento-box" id="soundboard">
       <div class="bento-icon-lg">🔊</div>
       <div>
         <h3 class="bento-card-title">Procedural Web Audio</h3>
         <p class="bento-card-desc">
-          Synthesized harmonic oscillators with Apple smooth attack/decay curves. Respects platform muting instantly.
+          Synthesized harmonic oscillators with Apple smooth attack and decay curves. Zero latency, respects system muting instantly.
         </p>
+        <div class="soundboard-grid">
+          <button class="sound-btn" onclick="demoAudio(660, 0.1, 'sine')">🎵 Jump Tone</button>
+          <button class="sound-btn" onclick="demoAudio(880, 0.15, 'triangle')">⭐ Star Boost</button>
+          <button class="sound-btn" onclick="demoAudio(990, 0.2, 'sine')">💎 Gem Chord</button>
+          <button class="sound-btn" onclick="demoAudio(140, 0.2, 'sawtooth')">💥 Shockwave</button>
+        </div>
       </div>
     </div>
 
@@ -512,13 +733,21 @@
   <div class="section-header">
     <div class="section-eyebrow">Distribution Portal</div>
     <h2 class="section-title">12 Native Platform Releases.</h2>
-    <p style="color: rgba(255,255,255,0.6); margin-top: 8px;">
-      100% Native Official SDKs — Zero Playgama or third-party middleware dependencies.
+    <p style="color: rgba(255,255,255,0.65); margin-top: 10px;">
+      100% Native Official Vendor SDKs — ZERO Playgama or third-party middleware dependencies.
     </p>
   </div>
 
+  <!-- Category Filter Pills -->
+  <div class="platform-filters">
+    <button class="filter-btn active" data-filter="all">All (12)</button>
+    <button class="filter-btn" data-filter="portals">Web Portals (6)</button>
+    <button class="filter-btn" data-filter="instant">Social & Instant (3)</button>
+    <button class="filter-btn" data-filter="apps">App Stores (3)</button>
+  </div>
+
   <div class="platform-hub-grid">
-    <div class="platform-card">
+    <div class="platform-card" data-cat="instant">
       <div class="platform-card-header">
         <div class="platform-icon">📺</div>
         <div>
@@ -529,7 +758,7 @@
       <a href="../releases/youtube-playables.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="instant">
       <div class="platform-card-header">
         <div class="platform-icon">📘</div>
         <div>
@@ -540,7 +769,7 @@
       <a href="../releases/facebook-instant-games.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🦊</div>
         <div>
@@ -551,7 +780,7 @@
       <a href="../releases/poki.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🕹️</div>
         <div>
@@ -562,7 +791,7 @@
       <a href="../releases/crazygames.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🎮</div>
         <div>
@@ -573,7 +802,7 @@
       <a href="../releases/yandex-games.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🌐</div>
         <div>
@@ -584,7 +813,7 @@
       <a href="../releases/game-distribution.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="instant">
       <div class="platform-card-header">
         <div class="platform-icon">💬</div>
         <div>
@@ -595,7 +824,7 @@
       <a href="../releases/discord-activities.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="apps">
       <div class="platform-card-header">
         <div class="platform-icon">📱</div>
         <div>
@@ -606,7 +835,7 @@
       <a href="../releases/jiogames.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🎯</div>
         <div>
@@ -617,7 +846,7 @@
       <a href="../releases/y8.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="portals">
       <div class="platform-card-header">
         <div class="platform-icon">🚀</div>
         <div>
@@ -628,7 +857,7 @@
       <a href="../releases/lagged.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="apps">
       <div class="platform-card-header">
         <div class="platform-icon">🛍️</div>
         <div>
@@ -639,7 +868,7 @@
       <a href="../releases/microsoft-store.zip" class="platform-download-btn">Download .ZIP</a>
     </div>
 
-    <div class="platform-card">
+    <div class="platform-card" data-cat="apps">
       <div class="platform-card-header">
         <div class="platform-icon">🌍</div>
         <div>
@@ -657,6 +886,72 @@
   <p>© 2026 Neon Emoji Runner • Crafted with ❤️ by Rahul Kumar</p>
   <p style="margin-top: 6px;">Open source under the MIT License • Built with Apple Fluid Design & Native SDK Bridges</p>
 </footer>
+
+<script>
+  // Spotlight Mouse Movement on Bento Cards
+  document.addEventListener('mousemove', (e) => {
+    const cards = document.querySelectorAll('.bento-box, .platform-card');
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+
+  // Device Bezel Aspect Ratio Switcher
+  const deviceTabs = document.querySelectorAll('.device-tab');
+  const deviceStage = document.getElementById('demo');
+  deviceTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      deviceTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const dev = tab.dataset.device;
+      deviceStage.className = 'device-stage device-' + dev;
+    });
+  });
+
+  // Platform Filter Pills
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const platformCards = document.querySelectorAll('.platform-card');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.filter;
+      platformCards.forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Procedural Soundboard Demo
+  let demoAudioCtx = null;
+  function demoAudio(freq, dur, type) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!demoAudioCtx && AudioCtx) demoAudioCtx = new AudioCtx();
+      if (demoAudioCtx && demoAudioCtx.state === 'suspended') demoAudioCtx.resume();
+      if (!demoAudioCtx) return;
+      const osc = demoAudioCtx.createOscillator();
+      const gain = demoAudioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, demoAudioCtx.currentTime);
+      gain.gain.setValueAtTime(0.001, demoAudioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.12, demoAudioCtx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, demoAudioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(demoAudioCtx.destination);
+      osc.start();
+      osc.stop(demoAudioCtx.currentTime + dur);
+    } catch (_) {}
+  }
+</script>
 
 </body>
 </html>

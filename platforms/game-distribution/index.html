@@ -876,6 +876,12 @@ function spawnParticles(x, y, col, count = 16) {
   }
 }
 
+// Apple Shockwave expansion physics
+let shockwaves = [];
+function addShockwave(x, y, col = '#00ffcc') {
+  shockwaves.push({ x, y, r: 10, maxR: 120, col, alpha: 1 });
+}
+
 function updateParticles(dt) {
   for (let i = parts.length - 1; i >= 0; i--) {
     const p = parts[i];
@@ -886,9 +892,25 @@ function updateParticles(dt) {
     p.life -= dt * 1.6;
     if (p.life <= 0) parts.splice(i, 1);
   }
+  for (let i = shockwaves.length - 1; i >= 0; i--) {
+    const sw = shockwaves[i];
+    sw.r += dt * 200;
+    sw.alpha -= dt * 1.8;
+    if (sw.alpha <= 0) shockwaves.splice(i, 1);
+  }
 }
 
 function drawParticles() {
+  shockwaves.forEach(sw => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+    ctx.strokeStyle = sw.col;
+    ctx.globalAlpha = Math.max(0, sw.alpha);
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.restore();
+  });
   parts.forEach(p => {
     ctx.globalAlpha = Math.max(0, p.life);
     ctx.fillStyle = p.col;
@@ -1053,6 +1075,7 @@ function takeDamage(pts = 1) {
   cameraShake = 12;
   combo = 0;
   spawnParticles(pl.x, pl.y, '#ff007f', 24);
+  addShockwave(pl.x, pl.y, '#ff007f');
   playTone(140, 0.2, 'sawtooth', 0.12);
   pulseDynamicIsland();
   updateDynamicIsland();
@@ -1078,6 +1101,7 @@ async function revivePlayer() {
     document.getElementById('gameover').style.display = 'none';
     document.getElementById('dynamicIsland').style.display = 'flex';
     spawnParticles(pl.x, pl.y, '#00ffcc', 35);
+    addShockwave(pl.x, pl.y, '#00ffcc');
     playTone(880, 0.25, 'sine', 0.15);
     showAppleToast('💖 Revived with Liquid Shield!');
     lastTime = performance.now();
@@ -1109,6 +1133,7 @@ function addScore(pts) {
   const gain = pts * (1 + combo * 0.15);
   score += gain;
   combo++;
+  addShockwave(pl.x, pl.y, '#00ffcc');
   pulseDynamicIsland();
 
   if (score > hs) {
@@ -1355,6 +1380,22 @@ function draw() {
     ctx.moveTo(0, y);
     ctx.lineTo(W, y);
     ctx.stroke();
+  }
+
+  // Speed warp streaks during combo streaks (Apple kinetic momentum)
+  if (combo > 1 && state === 'play') {
+    ctx.save();
+    ctx.strokeStyle = `rgba(0, 255, 204, ${Math.min(0.4, combo * 0.035)})`;
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 18; i++) {
+      const rx = (performance.now() * 0.85 + i * (W / 18)) % W;
+      const ry = ((i * 137) % H);
+      ctx.beginPath();
+      ctx.moveTo(rx, ry);
+      ctx.lineTo(rx + 30 + combo * 6, ry);
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   if (state !== 'play' && state !== 'paused') {
